@@ -1,0 +1,1522 @@
+Id,PostTypeId,AcceptedAnswerId,ParentId,CreationDate,Score,ViewCount,Body,OwnerUserId,OwnerDisplayName,LastEditorUserId,LastEditorDisplayName,LastEditDate,LastActivityDate,Title,Tags,AnswerCount,CommentCount,FavoriteCount,ClosedDate,CommunityOwnedDate
+"14107531","1","14110132","","2013-01-01 02:52:02","18","14316","<p>Sample app: <a href=""http://angular.github.com/angular-phonecat/step-11/app/#/phones"">http://angular.github.com/angular-phonecat/step-11/app/#/phones</a></p>
+
+<p>If you choose the last phone ""Motorola charm"" it will show you the details of the phone. 
+When you navigate back with on your browser it reloads the data and scrolling is at the top. </p>
+
+<p>What is the best way to automatically scroll to where is was left when navigatin back?
+And also, why does angular reloads the data? </p>
+
+<p>I have the same ""angular-phonecat"" sample on my computer and I have added an infinite scroll which loads more data as you scroll. So I really dont want the user to reload 50+ items again or scrolling down for 30 seconds.</p>
+","","user1012032","825568","","2013-01-01 03:38:24","2014-10-13 14:51:57","Retain scroll position on route change in AngularJS?","<javascript><angularjs>","8","3","13","",""
+"14107354","1","14109674","","2013-01-01 01:53:10","12","6815","<p>I have a string like <code>2012-01-01T01:02:03.456</code> that I am storing in a Postgres database TIMESTAMP using ActiveRecord.</p>
+
+<p>Unfortunately, Ruby seems to chop off the milliseconds:</p>
+
+<pre><code>ruby-1.9.3-rc1 :078 &gt; '2012-12-31T01:01:01.232323+3'.to_datetime
+ =&gt; Mon, 31 Dec 2012 01:01:01 +0300 
+</code></pre>
+
+<p>Postgrs supports microsecond resolution.  How can I get my timestamp to be saved accordingly? I need at least millisecond resolution.</p>
+
+<p>(PS Yes I could hack in a milliseconds integer column in postgres; that kind of defeats the whole purpose of ActiveRecord.)</p>
+
+<p><strong>UPDATE:</strong><br>
+The very helpful responses showed that Ruby's <code>DateTime</code> is <em>not</em> chopping off milliseconds; using <code>#to_f</code> shows it.  But, doing:</p>
+
+<pre><code>m.happened_at = '2012-01-01T00:00:00.32323'.to_datetime
+m.save!
+m.reload
+m.happened_at.to_f
+</code></pre>
+
+<p>Does drop the milliseconds.</p>
+
+<p>Now, the interesting thing is that <code>created_at</code> does show milliseconds, both in Rails and Postgres.  But other timestamps fields (like <code>happened_at</code> above) don't.  (Perhaps Rails uses a <code>NOW()</code> function for <code>created_at</code> as opposed to passing in a DateTime).</p>
+
+<p>Which leads to my ultimate question:<br>
+<strong>How can I get ActiveRecord to preserve millisecond resolution on timestamp fields?</strong></p>
+","785494","","785494","","2013-01-01 10:32:39","2013-11-15 14:39:26","Millisecond resolution of DateTime in Ruby","<ruby><postgresql><datetime><activerecord><rails-postgresql>","4","0","2","",""
+"14107208","1","14108774","","2013-01-01 01:13:40","67","40467","<p>Is there any way to <code>find and replace text string automatically in all folder's files</code>?</p>
+","895174","","895174","","2013-12-19 08:25:50","2014-12-17 17:25:55","Sublime text 2 - find and replace globally ( all files and in all directories )","<replace><ide><find><sublimetext2><global>","2","0","21","",""
+"14107804","1","14107826","","2013-01-01 04:22:58","12","4957","<p>It is a known fact that there are three blocks of IPv4 Addresses that were chosen to be reserved for private networks:</p>
+
+<pre><code> 10.0.0.0        -   10.255.255.255  (10/8 prefix)
+ 172.16.0.0      -   172.31.255.255  (172.16/12 prefix)
+ 192.168.0.0     -   192.168.255.255 (192.168/16 prefix)
+</code></pre>
+
+<p>(as specified by <a href=""http://tools.ietf.org/html/rfc1918"">RFC 1918</a>). However, although I can sort of see why 10.0.0.0 would be a natural choice, I can think of no particular reason why 172.16.0.0 and 192.168.0.0 were chosen among all the possibilities. I tried to google about this but got nothing, and the RFC document did not provide any explanation either. Was it really just a random decision?</p>
+","1939277","","62576","","2013-01-01 04:37:26","2013-01-01 22:05:55","Reasons behind the choice of 172.16/192.168?","<networking><protocols>","1","3","4","2013-01-01 04:33:52",""
+"14108430","1","14259396","","2013-01-01 06:35:56","12","2790","<p>I have a basic class that makes GET and POST requests using <code>HttpWebRequest</code>/<code>HttpWebResponse</code>.</p>
+
+<p>I use my class to login to an API and then request data. In a Windows 8 ""Metro"" application, it works exactly as expected. On a Windows Phone 8 application, the login appears to succeed, but in the subsequent request for data, no cookies are sent and the server responds as if the client is not logged in.</p>
+
+<p>Here is the class, this exact same code is used in the Windows 8 app and the Windows Phone app:</p>
+
+<pre><code>class Class1
+    {
+        CookieContainer cookieJar = new CookieContainer();
+        CookieCollection responseCookies = new CookieCollection();
+
+        public async Task&lt;string&gt; httpRequest(HttpWebRequest request)
+        {
+            string received;
+
+            using (var response = (HttpWebResponse)(await Task&lt;WebResponse&gt;.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null)))
+            {
+                using (var responseStream = response.GetResponseStream())
+                {
+                    using (var sr = new StreamReader(responseStream))
+                    {
+                        cookieJar = request.CookieContainer;
+                        responseCookies = response.Cookies;
+                        received = await sr.ReadToEndAsync();
+                    }
+                }
+            }
+
+            return received;
+        }
+
+        public async Task&lt;string&gt; get(string path)
+        {
+            var request = WebRequest.Create(new Uri(path)) as HttpWebRequest;
+            request.CookieContainer = cookieJar;
+
+            return await httpRequest(request);
+        }
+
+        public async Task&lt;string&gt; post(string path, string postdata)
+        {
+            var request = WebRequest.Create(new Uri(path)) as HttpWebRequest;
+            request.Method = ""POST"";
+            request.CookieContainer = cookieJar;
+
+            byte[] data = Encoding.UTF8.GetBytes(postdata);
+            using (var requestStream = await Task&lt;Stream&gt;.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, null))
+            {
+                await requestStream.WriteAsync(data, 0, data.Length);
+            }
+
+            return await httpRequest(request);
+        }
+    }
+</code></pre>
+
+<p>And the code to initiate the requests:</p>
+
+<pre><code>    var n = new Class1();
+    await n.post(""https://mydomain.com/api/login/"", ""username=myusername&amp;password=mypassword"");
+    await n.get(""https://mydomain.com/reader/feeds/"");
+</code></pre>
+
+<p>The curious thing is that if I prefix the domain name with ""www."" it works in both the Windows Phone 8 app and the Windows 8 Metro app.</p>
+
+<p>I think it has something to do with how the domain is handled. The cookie's domain is "".mydomain.com"", and without the prefix it must think the cookie's do not belong to that domain. After some searching I found <a href=""http://blog.codeblack.nl/post/HttpWebRequest-HttpWebResponse-and-cookies.aspx"">a report of someone noticing a similar problem</a>.</p>
+
+<p>What I do not understand is why this is treated differently in the Windows 8 app than the Windows Phone app, so that line-for-line identical code works on one platform but fails on another.</p>
+
+<hr>
+
+<p>I have done some more digging into this.</p>
+
+<p>The server code I used for this is in PHP:</p>
+
+<pre><code>&lt;?php
+
+if ($_REQUEST[""what""] == ""set"")
+{
+    setcookie(""TestCookie"",$_REQUEST[""username""] . "" "" . $_REQUEST[""password""], time()+3600*24, ""/"", ""subd.mydomain.com"");
+}
+
+if ($_GET[""what""] == ""get"")
+{
+    var_dump($_COOKIE);
+</code></pre>
+
+<p>Client code in C#:</p>
+
+<pre><code>    var n = new ClassLibrary1.Class1();
+            await n.get(""http://subd.mydomain.com/?what=set&amp;username=foo&amp;password=bar"");
+            await n.get(""http://subd.mydomain.com/?what=get"");
+</code></pre>
+
+<p>Here is an example of a cookie response from the server</p>
+
+<pre><code>Set-Cookie: ARRAffinity=295612ca; Path=/;Domain=subd.mydomain.com
+Set-Cookie: TestCookie=foo+bar; expires=Fri, 04-Jan-2013 17:19:25 GMT; path=/; domain=subd.mydomain.com
+</code></pre>
+
+<p>In the Windows 8 Store/Metro app, this is the result:</p>
+
+<pre><code>array(2) {
+  [""ARRAffinity""]=&gt;
+  string(8) ""295612ca""
+  [""TestCookie""]=&gt;
+  string(7) ""foo bar""
+}
+</code></pre>
+
+<p>In the Windows Phone app, this is the result:</p>
+
+<pre><code>array(0){
+}
+</code></pre>
+
+<p>The Windows Phone does not see any cookies when they are set this way.</p>
+
+<p>I change how <code>TestCookie</code> is set, the result from the server now looks like this:</p>
+
+<pre><code>Set-Cookie: ARRAffinity=295612ca;Path=/;Domain=subd.mydomain.com
+Set-Cookie: TestCookie=foo+bar; expires=Fri, 04-Jan-2013 17:29:59 GMT; path=/
+</code></pre>
+
+<p><code>TestCookie</code> now does not explicitly set a domain, ARRAffinity is unchanged.</p>
+
+<p>The Windows 8 Store/Metro app now returns this:</p>
+
+<pre><code>array(2) {
+  [""TestCookie""]=&gt;
+  string(7) ""foo bar""
+  [""ARRAffinity""]=&gt;
+  string(8) ""295612ca""
+}
+</code></pre>
+
+<p>The Windows Phone 8 app, returns this:</p>
+
+<pre><code>array(1) {
+  [""TestCookie""]=&gt;
+  string(7) ""foo bar""
+}
+</code></pre>
+
+<p>The <code>ARRAffinity</code> cookie is not sent because it explicitly declares a domain.</p>
+
+<p>If I assign some breakpoints and check the <code>CookieContainer</code> of the request, I have two entries in the <code>m_domainTable</code></p>
+
+<pre><code>+       [0] {[.subd.mydomain.com, System.Net.PathList]} System.Collections.Generic.KeyValuePair&lt;string,System.Net.PathList&gt;
++       [1] {[subd.mydomain.com, System.Net.PathList]}  System.Collections.Generic.KeyValuePair&lt;string,System.Net.PathList&gt;
+</code></pre>
+
+<p>The cookie that isn't sent, is in the <code>.subd.mydomain.com</code> container. This is the same on both Windows 8 and Windows Phone 8.</p>
+
+<p>However, if the cookie declares itself like this:</p>
+
+<pre><code>Set-Cookie: TestCookie=foo+bar; expires=Fri, 04-Jan-2013 17:19:25 GMT; path=/; domain=.mydomain.com
+</code></pre>
+
+<p>It is correctly sent on Windows Phone 8.</p>
+
+<p>In my original case, the server declares the cookie the same way regardless of if it is accessed via mydomain.com or www.mydomain.com; as "".mydomain.com"", but Windows Phone 8 doesn't seem to think a cookie for "".mydomain.com"" should be sent to ""mydomain.com"". This is problematic, as even if the server puts ""subd.mydomain.com"" as the domain, it is treated as having a preceding dot, and then doesn't work through no fault of its own. It seems it has to not send domain info with the cookie to have it treated correctly.</p>
+","66613","","66613","","2013-01-09 14:12:07","2013-01-10 13:47:15","Cookies not sent on Windows Phone app, but cookies are sent with same code in Windows 8 app","<c#><.net><http><windows-8><windows-phone-8>","1","6","1","",""
+"14107919","1","14107928","","2013-01-01 04:57:39","13","12641","<p>Is there any way to copy database structure without data in MySQL, so the new database will be the same as it is copied from, but with empty tables.</p>
+
+<p>After getting some suggestions I tried the command, but I am getting syntax error, my <code>username = root</code> and <code>password = nothing</code>. I guess the default one. I am trying following command, </p>
+
+<pre><code>mysqldump -u root -p -d xyz_db | mysql -u root -p -Dnew_db
+</code></pre>
+
+<p>what I am missing or misplacing in command?</p>
+","1705804","","1705804","","2015-01-05 05:34:39","2015-01-05 05:34:39","copy database structure without data in mysql (with empty tables)","<mysql><copy><database-schema>","4","0","4","",""
+"14109024","1","","","2013-01-01 08:33:07","20","20739","<p>866 charset installed by default in Windows' cmd.exe is poor and inconvinient as compared with glorious Unicode.</p>
+
+<p>Can I install Unicode by default or replace cmd.exe to another console and make it default so programms use it instead of cmd.exe?</p>
+
+<p>I understand that <strong>chcp 65001</strong> changes encoding only in the running console. I want to change charset at the system level.</p>
+","1251169","","1002260","","2014-10-06 05:01:47","2014-12-23 14:29:43","How to make Unicode charset in cmd.exe by default?","<windows><unicode><character-encoding><cmd><console>","3","1","9","",""
+"14107979","1","14108694","","2013-01-01 05:12:16","18","4492","<p>I want to blur image rectangular or circular. After googling, I found that it is easy to blur whole image but it difficult to blur specific part of image (rectangular, circular). so how it is possible ??? </p>
+
+<p>Thanks in advance</p>
+","1917782","","1917782","","2013-08-19 15:13:35","2013-11-14 06:26:45","Blur an image of specific part (rectangular, circular)?","<iphone><objective-c><ios>","2","10","24","",""
+"14109079","1","17695402","","2013-01-01 08:43:25","16","31520","<p>I am a newbie to Eclipse and Java. I'm trying to install Java to use Eclipse (I followed all instructions to install Java and Eclipse) but my Eclipse is not starting due to some bad configuration I guess. I can't figure out why it's not working for me.</p>
+
+<p><strong>Eclipse Installation:</strong></p>
+
+<ol>
+<li>Extracted Eclipse at <code>C:\eclipse</code></li>
+<li>Created a shortcut to my desktop having target <code>C:\eclipse\eclipse.exe</code></li>
+</ol>
+
+<p>When I try to run Eclipse with this shortcut, I see following Eclipse splash screen for a second and it disappears. Eclipse does not start at all.</p>
+
+<p><img src=""http://i.stack.imgur.com/LlTUj.png"" alt=""Eclipse Splash Screen""></p>
+
+<p><strong>JAVA Installation:</strong></p>
+
+<ol>
+<li>Installed JDK at <code>C:\Program Files\Java\jdk1.7.0_10</code></li>
+<li>Installed JRE at <code>C:\Program Files\Java\jre7</code></li>
+</ol>
+
+<p><strong>Environment Variables Configuration:</strong></p>
+
+<pre><code>JAVA_HOME = C:\Program Files\Java\jdk1.7.0_10
+PATH = C:\Program Files\Java\jdk1.7.0_10\bin;
+</code></pre>
+
+<p>I tested my Java installation using the console and figured out this issue but I don't know how to fix it, and I guess this is causing Eclipse not to start.</p>
+
+<p><strong>Problem:</strong></p>
+
+<p><img src=""http://i.stack.imgur.com/aXxoU.png"" alt=""enter image description here""></p>
+
+<p>Any help will be highly appreciated!</p>
+","1070732","","1871769","","2013-01-01 09:01:11","2013-07-17 08:57:32","Error occured during initialization of VM (java/lang/NoClassDefFoundError: java/lang/Object)","<windows><eclipse><java><java-7>","3","3","5","",""
+"14109927","1","14110096","","2013-01-01 11:12:14","15","17611","<p>I am using AngularJS with Rails. I have the following request which updates users in bulk.</p>
+
+<pre><code> $http{
+    method: 'POST',
+    url: $scope.update_url,
+    params: {selected_ids: userIds}
+ }
+</code></pre>
+
+<p>This cannot be a 'GET' request due to restrictions in the length of the URL (http://support.microsoft.com/kb/208427)</p>
+
+<p>But for 'POST' request, we need to have a CSRF authenticity token in the header.</p>
+
+<p>How can we set the CSRF Token to the post request header?</p>
+","1300302","","","","","2013-11-10 13:59:54","Angular JS Verify CSRF Token in POST Request","<angularjs><javascript-framework>","2","0","17","",""
+"14109724","1","14109796","","2013-01-01 10:41:09","18","37397","<blockquote>
+  <p><strong>Possible Duplicate:</strong><br>
+  <a href=""http://stackoverflow.com/questions/920413/make-error-missing-separator"">Make error: missing separator</a>  </p>
+</blockquote>
+
+
+
+<p>Have this code in makefile:</p>
+
+<pre><code>PROG = semsearch
+all: $(PROG)
+%: %.c
+gcc -o $@ $&lt; -lpthread
+
+clean:
+rm $(PROG)
+</code></pre>
+
+<p>and the error</p>
+
+<pre><code>missing separator. stop.
+</code></pre>
+
+<p>Can someone help me?</p>
+","1827257","","648658","","2015-01-08 15:56:37","2015-01-08 15:56:37","Makefile - missing separator","<makefile><gnu-make>","1","3","3","2013-01-01 22:01:21",""
+"14109474","1","","","2013-01-01 09:58:09","19","11399","<p>i try to import into mongoDB 70 mega json file that is valid.
+but getting this error over and over in aloop:</p>
+
+<pre><code> 01 11:42:20 exception:BSON representation of supplied JSON is too large: Failure parsing JSON string near: ""name"": ""L
+ 01 11:42:20
+ 01 11:42:20 Assertion: 10340:Failure parsing JSON string near: ""link"": ""h
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 kernel32.dll       BaseThreadInitThunk+0x12
+ 01 11:42:20 ntdll.dll          RtlInitializeExceptionChain+0xef
+ 01 11:42:20 exception:BSON representation of supplied JSON is too large: Failure parsing JSON string near: ""link"": ""h
+ 01 11:42:20
+ 01 11:42:20 Assertion: 10340:Failure parsing JSON string near: }
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 kernel32.dll       BaseThreadInitThunk+0x12
+ 01 11:42:20 ntdll.dll          RtlInitializeExceptionChain+0xef
+ 01 11:42:20 exception:BSON representation of supplied JSON is too large: Failure parsing JSON string near: }
+ 01 11:42:20
+ 01 11:42:20 Assertion: 10340:Failure parsing JSON string near: ],
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 mongoimport.exe    ???
+ 01 11:42:20 kernel32.dll       BaseThreadInitThunk+0x12
+ 01 11:42:20 ntdll.dll          RtlInitializeExceptionChain+0xef
+ 01 11:42:20 exception:BSON representation of supplied JSON is too large: Failure parsing JSON string near: ],
+</code></pre>
+
+<p>my json ( only small example from it ) consist meny meny structures as this one :</p>
+
+<pre><code>[ 
+{
+   ""data"": [
+         ""id"": ""xxxxxxxxxxxxxxxxxx"",
+         ""from"": {
+            ""name"": ""yyyyyyyyyyy"",
+            ""id"": ""1111111111111""
+         },
+         ""to"": {
+            ""data"": [
+               {
+                  ""version"": 1,
+                  ""name"": ""1111111111111"",
+                  ""id"": ""1111111111111""
+               }
+            ]
+         },
+         ""picture"": ""fffffffffffffffffffffff.jpg"",
+         ""link"": ""http://www.youtube.com/watch?v=qqqqqqqqqqqqq"",
+         ""source"": ""http://www.youtube.com/v/qqqqqqqqqqqqq?version=3&amp;autohide=1&amp;autoplay=1"",
+         ""name"": ""xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"",
+         ""description"": ""xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..."",
+         ""icon"": ""http://static.ak.fbcdn.net/rsrc.php/v2/xxx/r/dddd"",
+         ""actions"": [
+            {
+               ""name"": ""Comment"",
+               ""link"": ""http://www.xxx.com/1111111111111/posts/1111111111111""
+            },
+            {
+               ""name"": ""Like"",
+               ""link"": ""http://www.xxxx.com/1111111111111/posts/1111111111111""
+            }
+         ],
+         ""privacy"": {
+            ""value"": """"
+         },
+         ""type"": ""video"",
+         ""created_time"": 1356953890,
+         ""updated_time"": 1356953890,
+         ""likes"": {
+            ""data"": [
+               {
+                  ""name"": ""jjj "",
+                  ""id"": ""59xxx67""
+               },
+               {
+                  ""name"": ""xxxxx"",
+                  ""id"": ""79xxx27""
+               }
+            ],
+            ""count"": 2
+         },
+         ""comments"": {
+            ""count"": 0
+         }
+      },
+
+....
+....
+....
+}
+]
+</code></pre>
+
+<p>this is the general patern of the json "":</p>
+
+<pre><code>[
+{
+   ""data"": [
+      {
+
+      }
+    ],
+    ""paging"": {
+      ""previous"": ""link"",
+      ""next"": ""link""
+   }
+},
+   ""data"": [
+      {
+      }
+    ],
+    ""paging"": {
+      ""previous"": ""link"",
+      ""next"": ""link""
+   }
+},
+""data"": [
+      {
+      }
+    ],
+    ""paging"": {
+      ""previous"": ""link"",
+      ""next"": ""link""
+   }
+}
+]
+</code></pre>
+","63898","","63898","","2013-01-01 12:22:16","2014-12-16 13:20:44","mongodb mongoimport too large: Failure parsing errors","<json><mongodb><import>","5","0","7","",""
+"14109187","1","18806269","","2013-01-01 09:05:50","12","2665","<p>There is a <a href=""http://www.curious-creature.org/2012/12/11/android-recipe-1-image-with-rounded-corners/"">nice post</a> made by the popular Google developer <a href=""http://www.curious-creature.org/"">Romain Guy</a> that shows how to use a rounded corners drawable (called ""StreamDrawable"" in <a href=""https://docs.google.com/a/android.co.il/file/d/0B3dxhm5xm1sia2NfM3VKTXNjUnc/edit"">his code</a> ) on a view efficiently.</p>
+
+<p>The sample itself works very well on my Galaxy S3 when in portrait mode, but I have a few issues with it:</p>
+
+<ol>
+<li><p>if the screen is small (for example on qvga screens), the shown images get cropped.</p></li>
+<li><p>if I have an input bitmap that is too small than how I wish to show it, the output image has its edges smeared. Even on the Galaxy S3, when you run the sample code and it's on landscape, it looks awful:</p>
+
+<p><img src=""http://i.stack.imgur.com/nr2Hw.jpg"" alt=""enter image description here""></p></li>
+<li><p>I'm still not sure about it (since I use a workaround of scaling the image for using the sample code), but it think that even this solution is a bit slow when being used in a listView. Maybe there is a renderscript solution for this?</p></li>
+</ol>
+
+<p>It doesn't matter if I use setImageDrawable or setBackgroundDrawable. It must be something in the drawable itself.</p>
+
+<p>I've tried to play with the variables and the bitmapShader, but nothing worked. Sadly <a href=""http://developer.android.com/reference/android/graphics/Shader.TileMode.html""><strong>TileMode</strong></a> doesn't have a value for just stretching the image, only tiling it in some way.</p>
+
+<p>As a workaround I can create a new scaled bitmap, but it's just a workaround. Surely there is a better way which will also not use more memory than it should.</p>
+
+<p>How do I fix those issues and use this great code?</p>
+","878126","","488657","","2013-01-29 23:00:43","2014-12-23 21:00:12","Using a rounded corners drawable","<android><rounded-corners><android-drawable>","3","12","14","",""
+"14109906","1","","","2013-01-01 11:10:35","20","463","<p>I wonder if anyone can help me with a problem that is making me pull what's left of my hair out...</p>
+
+<p>I am currently working on a project that requires me to talk to a Unidata database. PHP has no native driver to access this type of database, however, after some Googling, I found the following:</p>
+
+<p><a href=""https://u2devzone.rocketsoftware.com/accelerate/articles/u2-pdo-driver/u2-pdo-driver"">https://u2devzone.rocketsoftware.com/accelerate/articles/u2-pdo-driver/u2-pdo-driver</a>.</p>
+
+<p>I have the U2 Intercall header and library and I think I am including them correctly. However, the extension compiles but does not pass the tests as it errors out with</p>
+
+<pre><code>pdo_u2.so: undefined symbol: ic_universe_session in Unknown on line 0
+</code></pre>
+
+<p>which suggests to me that it is not being linked against the library. When I edit the makefile and specify by hand that the library should be included, it errors out with </p>
+
+<pre><code>relocation R_X86_64_32 against `.rodata.str1.1' can not be used when making a shared object; recompile with -fPIC
+/home/kaigoh/Downloads/intcall/lib/libuvic.a: could not read symbols: Bad value
+collect2: error: ld returned 1 exit status
+make: *** [pdo_u2.la] Error 1
+</code></pre>
+
+<p>I have tried forcing the -fPIC switch in the makefile but I get the same error.</p>
+
+<p>I simply do not know enough about compiling custom PHP extensions to assist myself, and I am hoping there is a guru here who can point me in the right direction!</p>
+
+<p>UPDATE: This compiles perfectly using a 32-bit install of Linux, so no idea why it is failing with a 64-bit install...</p>
+","421681","","421681","","2013-01-01 16:13:11","2013-04-04 19:53:41","Trying to build PHP PDO extension for Rocket U2","<php><pdo><u2><universe><unidata>","1","3","","",""
+"14110532","1","14130068","","2013-01-01 12:37:52","20","797","<p><em>What I mean by extended computation expressions is computation expressions with custom keywords defined via <a href=""http://msdn.microsoft.com/en-us/library/hh289709.aspx"">CustomOperation</a> attribute.</em></p>
+
+<p>When reading about <a href=""http://files.meetup.com/2922732/Computation%20Expressions%20%28April%29.pdf"">extended computation expressions</a>, I come across very cool IL DSL by @kvb:</p>
+
+<pre><code>let il = ILBuilder()
+
+// will return 42 when called
+// val fortyTwoFn : (unit -&gt; int)
+let fortyTwoFn = 
+    il {
+        ldc_i4 6
+        ldc_i4_0
+        ldc_i4 7
+        add
+        mul
+        ret
+    }
+</code></pre>
+
+<p>I wonder how the operations compose without using <code>for..in..do</code> construct. My gut feeling is that it starts with <code>x.Zero</code> member, but I haven't found any reference to verify that.</p>
+
+<p>If the example above is too technical, here is a similar DSL where components of a slide are listed without <code>for..in..do</code>:</p>
+
+<pre><code>page {
+      title ""Happy New Year F# community""
+      item ""May F# continue to shine as it did in 2012""
+      code @""…""
+      button (…)
+} |&gt; SlideShow.show
+</code></pre>
+
+<p>I have a few closely related questions:</p>
+
+<ul>
+<li><em>How does one define or use extended computation expressions without <code>For</code> member (i.e. provide a small complete example)?</em> I don't worry much if they aren't monads any longer, I'm interested in them in developing DSLs.</li>
+<li><em>Can we use extended computation expressions with <code>let!</code> and <code>return!</code>? If yes, is there any reason of not doing so?</em> I ask these questions because I haven't encountered any example using <code>let!</code> and <code>return!</code>.</li>
+</ul>
+","634025","","634025","","2013-01-01 18:01:20","2013-01-02 22:13:38","Extended computation expressions without for..in..do","<f#><dsl><computation-expression><query-expressions>","2","0","9","",""
+"14111052","1","14185426","","2013-01-01 13:54:10","12","12324","<p>So I went and tried to add <code>Multi Window</code> support for my app following this <a href=""http://www.modaco.com/page/news/_/android/developers-add-support-for-samsung-multi-window-to-your-apps-r823"">link</a>. My app did appear in the <code>Multi Window</code> applications tab, and I was able to drag and drop it into the screen, however my app did not behave as <code>Multi Window</code> supported app should behave, but instead expanded to full screen. So I think there are some other changes that are need to be made to get it work properly, but I have no idea what. Does anyone have any ideas what could be the problem causing this behaviour?</p>
+","1301750","","350040","","2014-06-04 17:59:26","2014-10-14 06:22:19","Adding multi window support to android application","<android><samsung-mobile><multi-window>","3","0","19","",""
+"14110890","1","","","2013-01-01 13:31:03","40","6221","<p>I always used Repository pattern but for my latest project I wanted to see if I could perfect the use of it and my implementation of “Unit Of Work”. The more I started digging I started asking myself the question: <strong>""Do I really need it?""</strong></p>
+
+<p>Now this all starts with a couple of comments on Stackoverflow with a trace to Ayende Rahien's post on his blog, with 2 specific,</p>
+
+<ul>
+<li><a href=""http://ayende.com/blog/3955/repository-is-the-new-singleton"">repository-is-the-new-singleton</a></li>
+<li><a href=""http://ayende.com/blog/153701/ask-ayende-life-without-repositories-are-they-worth-living"">ask-ayende-life-without-repositories-are-they-worth-living</a></li>
+</ul>
+
+<p>This could probably be talked about forever and ever and it depends on different applications. Whats I like to know,</p>
+
+<ol>
+<li>would this approach be suited for a Entity Framework project?</li>
+<li>using this approach is the business logic still going in a service layer, or extension methods (as explained below, I know, the extension method is using NHib session)?</li>
+</ol>
+
+<p><strong>That's easily done using extension methods. Clean, simple and reusable.</strong></p>
+
+<pre><code>public static IEnumerable GetAll(
+    this ISession instance, Expression&lt;Func&lt;T, bool&gt;&gt; where) where T : class
+{
+    return instance.QueryOver().Where(where).List();
+}
+</code></pre>
+
+<p>Using this approach and <code>Ninject</code> as DI, do I need to make the <code>Context</code> a interface and inject that in my controllers?</p>
+","148601","","301832","","2013-01-01 13:43:01","2015-01-30 02:02:48","NOT using repository pattern, use the ORM as is (EF)","<entity-framework><design-patterns><architecture><aop><repository-pattern>","7","7","25","",""
+"14111677","1","14974234","","2013-01-01 15:29:08","16","14581","<p>I'm seeing many of these errors when using my emulator with IntelliJ.  I'm not sure what to do about it.  It doesn't appear to have been affecting anything, so I haven't paid much attention to it.  But I'm concerned it may cause an issue before long.</p>
+
+<pre><code>01-01 15:16:22.805: ERROR/StrictMode(607): null
+        android.app.ServiceConnectionLeaked: Service com.android.exchange.ExchangeService has leaked ServiceConnection com.android.emailcommon.service.ServiceProxy$ProxyConnection@40cf0270 that was originally bound here
+        at android.app.LoadedApk$ServiceDispatcher.&lt;init&gt;(LoadedApk.java:969)
+        at android.app.LoadedApk.getServiceDispatcher(LoadedApk.java:863)
+        at android.app.ContextImpl.bindService(ContextImpl.java:1418)
+        at android.app.ContextImpl.bindService(ContextImpl.java:1407)
+        at android.content.ContextWrapper.bindService(ContextWrapper.java:473)
+        at com.android.emailcommon.service.ServiceProxy.setTask(ServiceProxy.java:157)
+        at com.android.emailcommon.service.ServiceProxy.setTask(ServiceProxy.java:145)
+        at com.android.emailcommon.service.AccountServiceProxy.getDeviceId(AccountServiceProxy.java:116)
+</code></pre>
+","197606","","","","","2013-03-16 07:47:48","""com.android.exchange.ExchangeService has leaked ..."" error when running emulator","<java><android>","1","4","1","2013-03-26 02:49:38",""
+"14111679","1","14111686","","2013-01-01 15:29:30","15","635","<p>In Java, I've done things like the following without thinking much about it:</p>
+
+<pre><code>public class Main {
+
+    public void run() {
+        // ...
+    }
+
+    public static void main(String[] args) {
+        new Main().run();
+    }
+}
+</code></pre>
+
+<p>However, recently I've become unsure as to whether doing that is safe. After all, there is no reference to the <code>Main</code> object after it's created (well, there is the <code>this</code> reference, but does that count?), so it looks like there's a danger that the garbage collector might delete the object while it's in the middle of executing something. So perhaps the <code>main</code> method should look like this:</p>
+
+<pre><code>    public static void main(String[] args) {
+        Main m = new Main();
+        m.run();
+    }
+</code></pre>
+
+<p>Now, I'm pretty sure that the first version works and I've never had any problems with it, but I'd like to know if it's safe to do in all cases (not only in a specific JVM, but preferably according to what the language specification says about such cases).</p>
+","595306","","","","","2014-03-19 09:54:49","Java - Can objects which are executing methods be garbage-collected?","<java><object><garbage-collection><main>","3","4","4","",""
+"14111572","1","14112752","","2013-01-01 15:15:10","16","2080","<p>Let say I have a storyboard that contains <code>UINavigationController</code> as initial view controller. Its root view controller is subclass of <code>UITableViewController</code>, which is <code>BasicViewController</code>. It has <code>IBAction</code> which is connected to right navigation button of the navigation bar<br />
+<br />
+From there I would like to use the storyboard as a template for other views without having to create additional storyboards. Say these views will have exactly the same interface but with root view controller of class <code>SpecificViewController1</code> and <code>SpecificViewController2</code> which are subclasses of <code>BasicViewController</code>.<br />
+Those 2 view controllers would have the same functionality and interface except for the <code>IBAction</code> method.<br />
+It would be like the following:</p>
+
+<pre><code>@interface BasicViewController : UITableViewController
+
+@interface SpecificViewController1 : BasicViewController
+
+@interface SpecificViewController2 : BasicViewController
+</code></pre>
+
+<p>Can I do something like that?<br />
+Can I just instantiate the storyboard of <code>BasicViewController</code> but have root view controller to subclass <code>SpecificViewController1</code> and <code>SpecificViewController2</code>?<br />
+<br />
+Thanks.</p>
+","737888","","","","","2013-01-01 17:51:21","How to use single storyboard uiviewcontroller for multiple subclass","<objective-c><cocoa-touch><ios5><uiviewcontroller><storyboard>","1","1","4","",""
+"14112839","1","14112929","","2013-01-01 18:01:40","18","4375","<p>This is from <a href=""http://docs.jboss.org/hibernate/orm/3.3/reference/en/html/mapping.html"">Hibernate official tutorial</a>:</p>
+
+<blockquote>
+  <p>There is an alternative <code>&lt;composite-id&gt;</code> declaration that allows access to legacy data with composite keys. Its use is strongly discouraged for anything else.</p>
+</blockquote>
+
+<p>Why are composite keys discouraged? I am considering using a 3-column table where all of the columns are foreign keys and together form a primary key that is a meaningful relationship in my model. I don't see why this is a bad idea, espicially that I will be using an index on them.</p>
+
+<p>What's the alternative? Create an additional automatically generated column and use it as a primary key? I still need to query my 3 columns anyways!?</p>
+
+<p>In short, why is this statement true? and what's the better alternative?</p>
+","1230594","","","","","2014-11-26 15:49:57","Why are composite keys discouraged in hibernate?","<java><database><hibernate><orm><composite-key>","4","1","12","",""
+"14111607","1","14111651","","2013-01-01 15:20:37","11","2699","<p>Foo has:</p>
+
+<pre><code>@ManyToMany(mappedBy = ""foos"")
+private Set&lt;Bar&gt; bars
+</code></pre>
+
+<p>and Bar has :</p>
+
+<pre><code>@ManyToMany
+private Set&lt;Foo&gt; foos
+</code></pre>
+
+<p>What difference does the location of mappedBy attribute make to a bi-directional relationship , other than whether table is called foo_bar, or bar_foo; and without the mappedBy attribute I get two join tables, both foo_bar and bar_foo.</p>
+","106261","","106261","","2013-01-01 15:26:47","2013-01-01 15:28:29","@ManyToMany(mappedBy = ""foo"")","<java><hibernate><orm>","3","0","1","",""
+"14111831","1","","","2013-01-01 15:54:36","13","2433","<p>I want to code an application that can read and decode a pdf document; now where I'm supposed to get the specs for this fileformat ? The PDF format is standardized from the ISO group but it's not clear to me where is the most reliable source for getting this kind of informations.</p>
+
+<p>what is a good source to start with this file format ?</p>
+","1824407","","","","","2015-01-19 22:40:03","PDF specifications for coders: Adobe or ISO?","<c++><c><pdf><specifications>","2","21","3","",""
+"14112515","1","14112532","","2013-01-01 17:22:12","31","7604","<p>Today, after half an hour of searching for a bug, I discovered that it is possible to put a semicolon after an if statement instead of code, like this:</p>
+
+<pre><code>if(a == b);
+//do stuff
+</code></pre>
+
+<p>which basically means that the stuff will be done whether a equals b or not, and the if statement has no point whatsoever. Why doesn't java give me an error? Is there any situation in which this would be useful?</p>
+","1144231","","527702","","2013-01-02 13:36:48","2013-06-04 10:02:23","semicolon at end of if statement","<java><if-statement><semicolon>","14","6","6","",""
+"14113057","1","14113150","","2013-01-01 18:27:49","21","34027","<p>I am creating a scaffold -</p>
+
+<pre><code>rails g scaffold Contact email:string email_provider:string 
+</code></pre>
+
+<p>but I want the email provider to be a drop down (with gmail/yahoo/msn as options) and not a text field. How can I do this ? </p>
+
+<p>Thanks</p>
+
+<p>Edit - I see this code </p>
+
+<pre><code>&lt;%= f.select :email_provider, options_for_select(%w[Gmail Yahoo MSN]) %&gt;
+</code></pre>
+
+<p>is working fine for me, so just wondering what is the difference in using Select and collection_select as mentioned in below answers ? </p>
+","692622","","631619","","2013-01-01 21:12:18","2014-10-16 20:33:59","How to have a drop down <select> field in a rails form?","<ruby-on-rails><ruby-on-rails-3><drop-down-menu><input><selectlist>","4","0","12","",""
+"14113427","1","15395445","","2013-01-01 19:19:03","127","48227","<p>Trying to update Homebrew with <code>brew update</code> I got the following error</p>
+
+<pre><code>error: The following untracked working tree files would be overwrittenby merge:     
+ Library/Formula/argp-standalone.rb
+ Library/Formula/cocot.rb 
+Please move or remove them before you can merge. 
+Aborting 
+Updating e088818..5909e2c 
+Error: Failed while executing git pull  origin refs/heads/master:refs/remotes/origin/master
+</code></pre>
+
+<p>I found a blog post by someone who experienced a similar problem after having installed Mountain Lion (which I did this week too). He explains how he removed the files referred to in the error message</p>
+
+<pre><code>I removed these files:
+$ cd $(brew --prefix)
+$ rm cocot.rb
+However, removing these files didn't help with the brew update. Instead I had to manually update brew through git:
+$ cd $(brew --prefix)
+$ git fetch origin
+$ git reset --hard origin/master
+$ brew update
+Already up-to-date.
+</code></pre>
+
+<p>Assuming those instructions are correct (which I maybe shouldn't assume), I tried to follow these instructions and do </p>
+
+<pre><code>    $ cd $(brew --prefix)
+    $ rm cocot.rb
+</code></pre>
+
+<p>However, it said 'file doesn't exist' when I tried to rm cocot.rb</p>
+
+<p>One thing I'm not sure about is the <code>cd $(brew --prefix)</code> Are those the exact words I type or do I have to replace prefix with something? the cd was successful, so I'm assuming it was correct -- it moved me into /usr/local, but there was no file to remove. Contents of /usr/local are</p>
+
+<pre><code>Cellar              clamXav             git             mysql               var Library             doc             heroku              mysql-5.5.15-osx10.6-x86_64 README.md           etc             include             rvm bin             foreman             lib             share
+</code></pre>
+
+<p>At any rate, do you know how I can fix the 'brew update'</p>
+
+<p>Update: After removing the files according to favoretti's instructions and trying <code>chown -R &lt;your_username&gt; $(brew --prefix)/.git</code>, I got the following error running <code>brew update</code></p>
+
+<pre><code>error: The following untracked working tree files would be overwritten by merge:
+    Library/Aliases/gperftools
+    Library/Aliases/hashdeep
+    Library/Aliases/htop
+    Library/Aliases/nodejs
+    Library/Aliases/ocio
+    Library/Aliases/oiio
+    Library/Aliases/pgrep
+    Library/Aliases/pkill
+    Library/Aliases/qt4
+    Library/Aliases/twolame
+    Library/Aliases/wxwidgets
+    Library/Contributions/cmds/brew-aspell-dictionaries
+    Library/Contributions/cmds/brew-beer.rb
+    Library/Contributions/cmds/brew-dirty.rb
+    Library/Contributions/cmds/brew-graph
+    Library/Contributions/cmds/brew-grep
+    Library/Contributions/cmds/brew-leaves.rb
+    Library/Contributions/cmds/brew-linkapps.rb
+    Library/Contributions/cmds/brew-ls-taps.rb
+    Library/Contributions/cmds/brew-man
+    Library/Contributions/cmds/brew-md5-to-sha1
+    Library/Contributions/cmds/brew-mirror-check.rb
+    Library/Contributions/cmds/brew-pull.rb
+    Library/Contributions/cmds/brew-readall.rb
+    Library/Contributions/cmds/brew-server
+    Library/Contributions/cmds/brew-services.rb
+    Library/Contributions/cmds/brew-switch.rb
+    Library/Contributions/cmds/brew-test-bot.rb
+    Library/Contributions/cmds/brew-tests.rb
+    Library/Contributions/cmds/brew-unpack.rb
+    Library/Contributions/cmds/brew-which.rb
+    Library/Contributions/cmds/git
+    Library/Contributions/cmds/svn
+    Library/ENV/4.3/apr-1-config
+    Library/ENV/4.3/bsdmake
+    Library/ENV/4.3/c++
+    Library/ENV/4.3/c89
+    Library/ENV/4.3/c99
+    Library/ENV/4.3/cc
+    Library/ENV/4.3/clang
+    Library/ENV/4.3/clang++
+    Library/ENV/4.3/cpp
+    Library/ENV/4.3/g++
+    Library/ENV/4.3/gcc
+    Library/ENV/4.3/git
+    Library/ENV/4.3/i686-apple-darwin11-llvm-g++-4.2
+    Library/ENV/4.3/i686-apple-darwin11-llvm-gcc-4.2
+    Library/ENV/4.3/ld
+    Library/ENV/4.3/llvm-g++
+    Library/ENV/4.3/llvm-g++-4.2
+    Library/ENV/4.3/llvm-gcc
+    Library/ENV/4.3/llvm-gcc-4.2
+    Library/ENV/4.3/make
+    Library/ENV/4.3/mig
+    Library/ENV/4.3/sed
+    Library/ENV/4.3/svn
+    Library/ENV/4.3/xcrun
+    Library/ENV/libsuperenv.rb
+    Library/ENV/pkgconfig/leopard/libcrypto.pc
+    Library/ENV/pkgconfig/leopard/libcurl.pc
+    Library/ENV/pkgconfig/mountain_lion/libcurl.pc
+    Library/ENV/pkgconfig/mountain_lion/libexslt.pc
+    Library/ENV/pkgconfig/mountain_lion/libxml-2.0.pc
+    Library/ENV/pkgconfig/mountain_lion/libxslt.pc
+    Library/Formula/abcl.rb
+    Library/Formula/abcmidi.rb
+    Library/Formula/aiccu.rb
+    Library/Formula/akka.rb
+    Library/Formula/alac.rb
+    Library/Formula/alure.rb
+    Library/Formula/appledoc.rb
+    Library/Formula/arangodb.rb
+    Library/Formula/argp-standalone.rb
+    Library/Formula/argtable.rb
+    Library/Formula/autopano-sift-c.rb
+    Library/Formula/avian.rb
+    Library/Formula/avidemux.rb
+    Library/Formula/avro-cpp.rb
+    Library/Formula/aws-cloudsearch.rb
+    Library/Formula/aws-sns-cli.rb
+    Library/Formula/backupninja.rb
+    Library/Formula/bact.rb
+    Library/Formula/bam.rb
+    Library/Formula/basex.rb
+    Library/Formula/berkeley-db4.rb
+    Library/Formula/bind.rb
+    Library/Formula/blazeblogger.rb
+    Library/Formula/bochs.rb
+    Library/Formula/boost149.rb
+    Library/Formula/bsdconv.rb
+    Library/Formula/bsdmake.rb
+    Library/Formula/buildapp.rb
+    Library/Formula/bup.rb
+    Library/Formula/byacc.rb
+    Library/Formula/cadubi.rb
+    Library/Formula/camellia.rb
+    Library/Formula/casperjs.rb
+    Library/Formula/ccextractor.rb
+    Library/Formula/cconv.rb
+    Library/Formula/cdo.rb
+    Library/Formula/cdpr.rb
+    Library/Formula/cgvg.rb
+    Library/Formula/checkstyle.rb
+    Library/Formula/chordii.rb
+    Library/Formula/chruby.rb
+    Library/Formula/cifer.rb
+    Library/Formula/clhep.rb
+    Library/Formula/cntlm.rb
+    Library/Formula/cocot.rb
+    Library/Formula/cogl.rb
+    Library/Formula/collada-dom.rb
+    Library/Formula/crash.rb
+    Library/Formula/crossroads.rb
+    Library/Formula/crosstool-ng.rb
+    Library/Formula/css-crush.rb
+    Library/Formula/csync.rb
+    Library/Formula/ctemplate.rb
+    Library/Formula/curlftpfs.rb
+    Library/Formula/cutter.rb
+    Library/Formula/cvsutils.rb
+    Library/Formula/darkstat.rb
+    Library/Formula/darner.rb
+    Library/Formula/dart.rb
+    Library/Formula/dasm.rb
+    Library/Formula/debianutils.rb
+    Library/Formula/dfc.rb
+    Library/Formula/dgtal.rb
+    Library/Formula/dhcping.rb
+    Library/Formula/di.rb
+    Library/Formula/dmtx-utils.rb
+    Library/Formula/drip.rb
+    Library/Formula/dsniff.rb
+    Library/Fo
+Aborting
+Updating e088818..c1fbc29
+Error: Failed while executing git pull  origin refs/heads/master:refs/remotes/origin/master
+</code></pre>
+","1647484","","1647484","","2013-01-01 19:46:29","2014-07-27 01:50:22","Brew update failed","<homebrew>","8","1","60","",""
+"14113691","1","14118242","","2013-01-01 19:56:44","13","709","<p>I am trying to develop pictorial charts. Is it possible to develop such charts in R ?
+<img src=""http://i.stack.imgur.com/QfVoU.jpg"" alt=""enter image description here""></p>
+
+<pre><code> myd &lt;- data.frame (categories = c(""Planes"", ""Ships"", ""Cars"", ""Trains""), 
+values = c(15, 18, 22, 11))
+</code></pre>
+
+<p>Component icons are here: </p>
+
+<p><img src=""http://i.stack.imgur.com/WNinq.jpg"" alt=""enter image description here"">
+<img src=""http://i.stack.imgur.com/7dqJM.jpg"" alt=""enter image description here"">
+<img src=""http://i.stack.imgur.com/9E3Wj.jpg"" alt=""enter image description here"">
+<img src=""http://i.stack.imgur.com/tStmx.jpg"" alt=""enter image description here""></p>
+","1502364","","","","","2013-01-02 09:19:58","pictorial chart in r","<r><graph><plot><image><figure>","1","3","8","",""
+"14113278","1","14485464","","2013-01-01 18:56:52","55","11867","<p>I have an offline web application using appcaching. I need to provide it about 10MB - 20MB of data that it will save (client-side) consisting mainly of PNG image files. The operation is as follows:</p>
+
+<ol>
+<li>Web application downloads and installs in appcache (uses manifest)</li>
+<li>Web app requests from server PNG data files (how? - see alternatives below)</li>
+<li>Occasionally web app resyncs with server, and does small partial updates/deletes/additions to PNG database</li>
+<li>FYI: Server is a JSON REST server, that can place files in wwwroot for pickup</li>
+</ol>
+
+<p>Here is my current analysis of client-based ""databases"" that handle binary blob storage</p>
+
+<h1>SEE UPDATE at Bottom</h1>
+
+<ul>
+<li><strong>AppCache</strong> (via manifest add all the PNG and then update on demand)
+<ul>
+<li>CON: any change of a PNG database item will mean complete download of all items in manifest (Really bad news!)</li>
+</ul></li>
+<li><strong>WebStorage</strong>
+<ul>
+<li>CON: Designed for JSON storage</li>
+<li>CON: can only store blobs via base64 encoding (probably fatal flaw due to cost of de-encoding)</li>
+<li>CON: Hard limit of 5MB for webStorage <a href=""http://htmlui.com/blog/2011-08-23-5-obscure-facts-about-html5-localstorage.html"">http://htmlui.com/blog/2011-08-23-5-obscure-facts-about-html5-localstorage.html</a></li>
+</ul></li>
+<li><strong>PhoneGap &amp; SQLLite</strong>
+<ul>
+<li>CON: Sponsor will reject it as a native app requiring certification</li>
+</ul></li>
+<li><strong>ZIP file</strong>
+<ul>
+<li>Server creates a zip file, places it in wwwroot, and notifies client</li>
+<li>user has to manually unzip (At least that is how I see it) and save to client file system</li>
+<li>Web app uses FileSystem API to reference files</li>
+<li>CON: ZIP might be too large (zip64?), long time to create</li>
+<li>CON: Not sure if FileSystem API can always read out of the sandbox (I think so)</li>
+</ul></li>
+<li><strong>USB or SD card</strong> (back to the stone age....)
+<ul>
+<li>The user will be local to the server before going offline</li>
+<li>So we could have him insert a SD card, let the server fill it with PNG files</li>
+<li>Then the user will plug it into the laptop, tablet</li>
+<li>Web app will use FileSystem API to read the files </li>
+<li>CON: Not sure if FileSystem API can always read out of the sandbox (I think so)</li>
+</ul></li>
+<li><strong>WebSQL</strong>
+<ul>
+<li>CON: w3c has abandoned it (pretty bad)</li>
+<li>I might consider a Javascript wrapper that uses IndexedDB and WebSQL as a fall-back</li>
+</ul></li>
+<li><strong>FileSystem API</strong>
+<ul>
+<li>Chrome supports read/write of blobs </li>
+<li>CON: not clear about IE and FireFox (IE10, has non-standard msSave)</li>
+<li>caniuse.com reports IOS and Android support (but again, is this just r/w of JSON, or does it include the full blob API for writing?</li>
+<li>CON: FireFox folks dislike FileSystem API &amp; not clear if they are supporting saving blobs: <a href=""https://hacks.mozilla.org/2012/07/why-no-filesystem-api-in-firefox/"">https://hacks.mozilla.org/2012/07/why-no-filesystem-api-in-firefox/</a></li>
+<li>PRO: <em>Much</em> faster than IndexedDB for blobs according to jsperf <a href=""http://jsperf.com/indexeddb-vs-localstorage/15"">http://jsperf.com/indexeddb-vs-localstorage/15</a> (page 2)</li>
+</ul></li>
+<li><strong>IndexedDB</strong>
+<ul>
+<li>Good support in IE10, FireFox (save, read blobs)</li>
+<li>Good speed and easier management than a file system (deletes, updates) </li>
+<li>PRO: see speed tests: <a href=""http://jsperf.com/indexeddb-vs-localstorage/15"">http://jsperf.com/indexeddb-vs-localstorage/15</a></li>
+<li>See this article on storing and display of images in IndexedDB: <a href=""https://hacks.mozilla.org/2012/02/storing-images-and-files-in-indexeddb/"">https://hacks.mozilla.org/2012/02/storing-images-and-files-in-indexeddb/</a></li>
+<li>CON: I confirmed that Chrome does not yet support blob writing (current bug, but not clear when it will be fixed)</li>
+<li>UPDATE: Chrome developers confirm they are working on this for both desktop and android! no timeline yet.</li>
+</ul></li>
+<li><strong>LawnChair</strong> JavaScript wrapper <a href=""http://brian.io/lawnchair/"">http://brian.io/lawnchair/</a>
+<ul>
+<li>PRO: very clean wrapper for IndexedDB, WebSQL or whatever database you have (think polyfill)</li>
+<li>CON: cannot store binary blobs, only data:uri (base64 encoding) (probably fatal flaw due to cost of de-encoding)</li>
+</ul></li>
+<li><strong>IndexedDB JQUERY</strong> polyFill <a href=""https://github.com/axemclion/jquery-indexeddb"">https://github.com/axemclion/jquery-indexeddb</a>
+<ul>
+<li>Parashuram has writtent a nice JQUERY wrapper for the raw IndexedDB interface</li>
+<li>PRO: greatly simplifies using IndexedDB, I was hoping to add a shim/polyfill for Chrome FileSystemAPI</li>
+<li>CON: It should handle blobs, but I was unable to get it to work</li>
+</ul></li>
+<li><strong>idb.filesystem.js</strong> <a href=""http://ericbidelman.tumblr.com/post/21649963613/idb-filesystem-js-bringing-the-html5-filesystem-api"">http://ericbidelman.tumblr.com/post/21649963613/idb-filesystem-js-bringing-the-html5-filesystem-api</a>
+<ul>
+<li>Eric Bidelman @ Google has written a well tested PolyFill the FileSystem API that uses Indexed DB as a fall back</li>
+<li>PRO: FileSystem API is well suited for storing blobs</li>
+<li>PRO: works great on FireFox and Chrome
+<ul>
+<li>PRO: great for synchronizing with cloud based CouchDB</li>
+</ul></li>
+<li>CON: no clear why, but it is not working on IE10</li>
+</ul></li>
+<li><strong>PouchDB</strong> JavaScript Library <a href=""http://pouchdb.com/"">http://pouchdb.com/</a>
+<ul>
+<li>great for syncing a CouchDB with a local DB (uses either WebSQL or IndexedDB (not my problem though)</li>
+<li>CON: NO CONS, PouchDB now supports binary blobs for all recent browsers (IE, Chrome, Firefox, Chrome on mobile, etc.) as well as many older browsers. That was not the case when I first did this post.</li>
+</ul></li>
+</ul>
+
+<p>NOTE: to see a data:uri encoding of PNG I created an example at: <a href=""http://jsbin.com/ivefak/1/edit"">http://jsbin.com/ivefak/1/edit</a></p>
+
+<p><strong>Desired/Usefull/Uneeded Features</strong></p>
+
+<ul>
+<li>No native (EXE, PhoneGap, ObjectiveC, etc) app on client (pure web application)</li>
+<li>Only needs to run on latest Chrome, FireFox, IE10 for laptops</li>
+<li>Strongly want same solution for Android Tablet (IOS would be nice too) but only need one browser to work (FF, Chrome, etc.)</li>
+<li>Fast initial DB population</li>
+<li>REQUIREMENT: Very fast retrieval of images by web application from storage (DB, file)</li>
+<li>Not meant for consumers. We can restrict browsers, and ask user to do special setup &amp; tasks, but let's minimize that</li>
+</ul>
+
+<p><strong>IndexedDB Implementations</strong></p>
+
+<ul>
+<li>There is an excellent article on how IE,FF,and Chrome internally implement this at: <a href=""http://www.aaron-powell.com/web/indexeddb-storage"">http://www.aaron-powell.com/web/indexeddb-storage</a></li>
+<li>In short:
+<ul>
+<li>IE uses the same database format as Exchange and Active Directory for IndexedDB</li>
+<li>Firefox is using SQLite so are kind of implementing a NoSQL database in to SQL database</li>
+<li>Chrome (and WebKit) are using a Key/ Value store which has heritage in BigTable</li>
+</ul></li>
+</ul>
+
+<p><strong>My Current Results</strong></p>
+
+<ul>
+<li>I chose to use an IndexedDB approach (and polyfill with FileSystemAPI for Chrome until they ship blob support)</li>
+<li>For fetching the tiles, I had a dilemna since the JQUERY folks are kvetching about adding this to AJAX</li>
+<li>I went with XHR2-Lib by Phil Parsons, which is very much like JQUERY .ajax() <a href=""https://github.com/p-m-p/xhr2-lib"">https://github.com/p-m-p/xhr2-lib</a></li>
+<li>Performance for 100MB downloads (IE10 4s, Chrome 6s, FireFox 7s). </li>
+<li>I could not get any of the IndexedDB wrappers to work for blobs (lawnchair, PouchDB, jquery-indexeddb, etc.)</li>
+<li>I rolled my own wrapper, and performance is (IE10 2s, Chrome 3s, FireFox 10s)</li>
+<li>With FF, I assume we are seeing the performance issue of using a relational DB (sqllite) for a non-sql storage</li>
+<li>NOTE, Chrome has outstanding debug tools (developer tab, resources) for inspecting the state of the IndexedDB.</li>
+</ul>
+
+<p><strong>FINAL Results posted below as answer</strong></p>
+
+<h1>Update</h1>
+
+<p>PouchDB now supports binary blobs for all recent browsers (IE, Chrome, Firefox, Chrome on mobile, etc.) as well as many older browsers. That was not the case when I first did this post.</p>
+","959460","","959460","","2014-08-28 14:40:06","2014-08-28 14:40:06","Storing Image Data for offline web application (client-side storage database)","<javascript><html5><web-applications><indexeddb><leaflet>","5","10","32","",""
+"14113559","1","","","2013-01-01 19:37:19","15","2034","<p>I would like to  make some changes in Jekyll's layout. Changes are small and different. For example, linking an additional CSS or JavaScript file. Or adding some info in header. Or tuning page title.
+<em>Important</em> that these changes depend on a page/post.</p>
+
+<p>Since changes are small and diverse, creating a special layout for each of them seems to be too expensive.</p>
+
+<p>I tried to create my own solution but run into <a href=""https://github.com/mojombo/jekyll/issues/176"">impossibility to use variables in including instructions</a>.</p>
+
+<p>Has anyone solved something similar? For example, linking a special CSS to a particular post?</p>
+","1175083","","","","","2014-03-28 05:17:30","How to tune layout for a particular page/post in Jekyll?","<jekyll>","2","1","6","",""
+"14114528","1","14245913","","2013-01-01 21:48:45","11","2186","<p>I've got a Maven project that I'm trying to configure to use the maven release plugin.  Part of the release process is to use the Maven GPG Plugin to sign artifacts which requires among other things, the GPG signing key passphrase to succeed.  Because these builds need to be runnable in a non interactive environment, (CI-Server) these params are passed in as arguments to maven in the form of </p>
+
+<pre><code>-Dgpg.passphrase=XXX
+</code></pre>
+
+<p>For snapshot builds everything works fine; the Maven GPG Plugin sees the passed in passphrase, artifacts are built, signed and deployed as expected, however, when I try to use the release plugin I get prompted for the gpg signing key password.  I've read through several discussions on similar issues that stem from the release plugin forking another invocation of maven which does not receive the passed in params.  The most popular fix seems to be to use the ""arguments"" parameter like this:</p>
+
+<pre><code>-Darguments=""-Dgpg.passphrase=XXX""
+</code></pre>
+
+<p>Supposedly this gets passed to the forked instance but unfortunately for me it's not getting rid of the prompt.</p>
+
+<p>Since signing artifacts is not an uncommon prerequisite for deploying release artifacts to public maven repos and presumably most entities producing those artifacts are using some form of CI I can't imagine I'm the only person who has encountered this problem.  Has anybody found a workaround?</p>
+
+<p><strong>A NOTE ABOUT THE ACCEPTED ANSWER:</strong></p>
+
+<p>The accepted solution will -not- work with Maven 3.0 - 3.0.3 and 3.0.3 just so happens to be what installs by default with java on OSX Mountain Lion.  <a href=""http://jira.codehaus.org/browse/MNG-5224"">See here</a> for the details.  You'll need to upgrade to 3.0.4.</p>
+","556613","","556613","","2013-01-18 06:02:56","2014-09-21 20:54:21","Avoid gpg signing prompt when using Maven release plugin","<maven><code-signing><maven-release-plugin><gnupg>","3","0","2","",""
+"14114411","1","14114419","","2013-01-01 21:31:41","39","134545","<blockquote>
+  <p><strong>Possible Duplicate:</strong><br>
+  <a href=""http://stackoverflow.com/questions/3022185/regular-expression-sanitize-php"">Regular Expression Sanitize (PHP)</a>  </p>
+</blockquote>
+
+
+
+<p>I am facing an issue with URLs, I want to be able to convert titles that could contain anything and have them stripped of all special characters so they only have letters and numbers and of course I would like to replace spaces with hyphens.</p>
+
+<p>How would this be done? I've heard a lot about regular expressions (regex) being used...</p>
+","2321939","","367456","","2013-01-01 21:51:53","2015-01-03 11:09:51","Remove all special characters from a string","<php><regex><url><slug>","3","1","16","2013-01-01 23:53:58",""
+"14115375","1","14115944","","2013-01-01 23:54:26","21","12973","<p>I have been wondering why people glorified jQuery's <code>$("".myClass"")</code> method when JavaScript has a generic <code>document.querySelector()</code>. Is there something I'm missing here? Why not just use the <code>document</code> object?</p>
+
+<p>I am completely new to JavaScript, so is there some type of con to <code>document.querySelector()</code> that I am not aware of?</p>
+
+<p>I'd really like to know because I ran across something like this earlier and I'm wondering if it might help a situation I'm in:</p>
+
+<pre><code>var retrieve = function( s ) {
+    return document.querySelector( s );
+};
+
+retrieve("".myClass"").style.display = ""block"";
+</code></pre>
+
+<p>Note: I have nothing against jQuery at all, in fact I love it. But I'd rather not cheat myself using the easy pre-made ready-to-use tools when I'm just now trying to learn JavaScript. Any help would be much appreciated! :-)</p>
+","1672778","","411918","","2013-01-02 01:24:57","2013-01-02 03:05:02","JavaScript's document.querySelector() same as jQuery $() method?","<javascript><jquery><dom><model><document>","1","15","8","",""
+"14114729","1","14114741","","2013-01-01 22:13:59","24","22344","<blockquote>
+  <p><strong>Possible Duplicate:</strong><br>
+  <a href=""http://stackoverflow.com/questions/13137817/how-to-download-image-using-requests"">How to download image using requests</a>  </p>
+</blockquote>
+
+
+
+<p>I know that fetching a url is as simple as <code>requests.get</code> and I can get at the raw response body and save it to a file, but for large files, is there a way to stream directly to a file? Like if I'm downloading a movie with it or something?</p>
+","197663","","","","","2014-04-15 20:22:27","Save a file using the python requests library","<python><file><http><download><request>","1","3","9","2013-01-02 01:55:12",""
+"14114480","1","14116462","","2013-01-01 21:41:52","12","4212","<p>I'm trying to make an HTTPS connection to a <a href=""https://www.onlinescoutmanager.co.uk"" rel=""nofollow"">server</a> that has a certificate set to expire in April 2013 and uses GlobalSign as the root certificate.</p>
+
+<pre><code>HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+// urlConnection.setSSLSocketFactory(sslSocketFactory);
+urlConnection.setDoOutput(true);
+urlConnection.setChunkedStreamingMode(0);
+
+// Send the POST data
+OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+out.write(postParamString.toString().getBytes(""UTF8""));
+
+// Read the reply
+InputStream in = urlConnection.getInputStream();
+</code></pre>
+
+<p>As it stands, this throws <code>javax.net.ssl.SSLHandshakeException: org.bouncycastle.jce.exception.ExtCertPathValidatorException: Could not validate certificate signature.</code> when <code>getOutputStream()</code> is called.</p>
+
+<p>This same site and certificate are valid in the stock HTC web browser and desktop browsers. When I use the same code to access <a href=""https://www.google.co.uk"" rel=""nofollow"">Google</a> it works (but then complains about a 404 error). Various posts on StackOverflow imply that it should ""just work"" and others say to set up your own key store (or disable all HTTPS validation!) I assume the difference in behaviour is down to different root key stores in use (Can anyone clarify this?).</p>
+
+<p>I've now tried creating a key store using bouncy castle but I can't get this to load on my device.</p>
+
+<p>After exporting the certificate from Firefox, I create a key store using:</p>
+
+<pre><code>keytool.exe -import -alias onlinescoutmanager -file www.onlinescoutmanager.co.uk.crt -storetype BKS -keystore res\raw\keystore
+</code></pre>
+
+<p>This is then loaded and used in the application using:</p>
+
+<pre><code>InputStream stream = context.getResources().openRawResource(R.raw.keystore);
+// BKS seems to be the default but we want to be explicit
+KeyStore ks = KeyStore.getInstance(""BKS"");
+ks.load(stream, ""www.onlinescoutmanager.co.uk"".toCharArray());
+stream.close();
+
+TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+tmf.init(ks);
+X509TrustManager defaultTrustManager = (X509TrustManager) tmf.getTrustManagers()[0];
+SSLContext context2 = SSLContext.getInstance(""TLS"");
+context2.init(null, new TrustManager[] { defaultTrustManager }, null);
+sslSocketFactory = context2.getSocketFactory();
+</code></pre>
+
+<p>This is failing with <code>java.io.IOException: Wrong version of key store.</code> when <code>keystore.Load()</code> is called.</p>
+
+<p>I have <a href=""http://stackoverflow.com/a/5187509/588306"">ensured I'm passing <code>-storetype BKS</code></a>, <a href=""http://stackoverflow.com/a/12528853/588306"">used a &lt;=7 character keystore password</a>, added the CA certs to the key store, and using both Bouncy Castle version 1.45 and 1.47 to create the key store with no change in the reported error message.</p>
+
+<p>My environment is Eclipse Juno 4.2.1 with JRE 1.7u9b5 running on Windows 8. The device I'm testing on is an HTC sensation running stock Android 2.3. The application has a minimum SDK version of 7 and a target of 15.</p>
+
+<p>If anyone can explain how to create a valid BKS key store on Windows 8 or how I can get Java to use the same key store as the browser(or system?) that would be appreciated.</p>
+
+<p>You can download the <a href=""https://www.dropbox.com/s/j148u838icm4rk5/SGM.zip"" rel=""nofollow"">entire project</a> as it was at the time of writing, and the <a href=""https://www.dropbox.com/s/0cnb8l2m90zyjc3/keystore"" rel=""nofollow"">generated keystore</a> if required.</p>
+","588306","","588306","","2013-01-02 23:36:17","2013-01-03 00:39:54","Making an HTTPS connection using URL.openConnection()","<java><android><https><bouncycastle><keystore>","2","7","3","",""
+"14114738","1","14114786","","2013-01-01 22:15:40","15","1353","<p>I have just installed Powerline plugin into my vim by using pathogen and submodule.</p>
+
+<p>The powerline <strong>is only visible</strong> when where are <strong>multiple buffers</strong>. When there is only one buffer in vim, I can't see it. </p>
+
+<p>I wonder whether it is a bug or not?</p>
+
+<p><img src=""http://i.stack.imgur.com/UdF4C.png"" alt=""single"">
+<img src=""http://i.stack.imgur.com/7q4KR.png"" alt=""vec"">
+<img src=""http://i.stack.imgur.com/L9eaj.png"" alt=""hoz""></p>
+","1022209","","","","","2013-01-01 22:22:35","Powerline can be shown in multiple buffer, but not in a single buffer","<vim><macvim><vim-plugin>","1","0","3","",""
+"14115440","1","14752347","","2013-01-02 00:03:18","17","42957","<p>I am trying to import <a href=""https://en.wikipedia.org/wiki/Pygame"">Pygame</a> to use for my version of <a href=""http://en.wikipedia.org/wiki/Python_%28programming_language%29"">Python</a>, 3.3. The downloads on the Pygame website only have Python 3.1 and 3.2. I cannot seem to be able to import Pygame though I thought I had it installed in the correct path. I have tried both the 3.1 and 3.2 Pygame downloads.</p>
+
+<p>Is Pygame just not installed in the correct file path or is Pygame not compatible with my version of Python (3.3)?</p>
+
+<p>I am running Windows&nbsp;7 and here is the error:</p>
+
+<pre><code>Traceback (most recent call last):
+File ""&lt;pyshell#3&gt;"", line 1, in &lt;module&gt;
+import pygame
+File "".\pygame\__init__.py"", line 95, in &lt;module&gt;
+from pygame.base import *
+ImportError: DLL load failed: The specified module could not be found.
+</code></pre>
+","1941681","","63550","","2014-03-01 10:03:05","2014-04-06 04:42:35","Pygame installation for Python 3.3","<python><pygame>","5","0","3","",""
+"14115620","1","14792896","","2013-01-02 00:31:50","16","6443","<p>I've written a custom ASP.NET control and I just updated it to have an async Load event handler. Now I'm getting this error:</p>
+
+<blockquote>
+  <p>An asynchronous operation cannot be started at this time. Asynchronous operations may only be started within an asynchronous handler or module or during certain events in the Page lifecycle. If this exception occurred while executing a Page, ensure that the Page is marked &lt;%@ Page Async=""true"" %>. </p>
+</blockquote>
+
+<p>The page <em>does</em> have the <code>&lt;%@ Page Async=""true"" %&gt;</code> tag already. So I take it that controls can't have async load event handlers. </p>
+
+<p>Where can I find a comprehensive list of events in the ASP.NET webforms lifecycle that are allowed to be async?</p>
+","46926","","","","","2013-05-06 22:14:38","Which ASP.NET lifecycle events can be async?","<asp.net><async-await>","2","5","8","",""
+"14115902","1","14115913","","2013-01-02 01:23:17","15","636","<p>It's commonly known that <code>{}</code> is shorter way to define an object like <code>[]</code> is for an array.</p>
+
+<p>But now I am wondering why:</p>
+
+<pre><code>{} != ({})
+</code></pre>
+
+<ul>
+<li><code>{}</code> evaluates to undefined</li>
+<li><code>({})</code> evaluates to ""correct"" Object</li>
+</ul>
+
+<p>Why is JavaScript behaving like this ?</p>
+
+<p>For example <code>1</code> equals to <code>(1)</code>, so why <code>{}</code> not equals to <code>({})</code> ?</p>
+","823738","","31671","","2013-01-03 07:01:52","2013-01-03 07:01:52","Why {} != ( {} ) in JavaScript?","<javascript>","2","4","3","",""
+"14116194","1","14116626","","2013-01-02 02:18:37","11","1262","<p>I'm generating a bunch of tiles for <code>CATiledLayer</code>. It takes about 11 seconds to generate 120 tiles at 256 x 256 with 4 levels of detail on an iPhone 4S. The image itself fits within 2048 x 2048.</p>
+
+<p>My bottleneck is <code>UIImagePNGRepresentation</code>. It takes about 0.10-0.15 seconds to generate every 256 x 256 image.</p>
+
+<p>I've tried generating multiple tiles on different background queue's, but this only cuts it down to about 9-10 seconds.</p>
+
+<p>I've also tried using the ImageIO framework with code like this:</p>
+
+<pre><code>- (void)writeCGImage:(CGImageRef)image toURL:(NSURL*)url andOptions:(CFDictionaryRef) options
+{
+    CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL((__bridge CFURLRef)url, (__bridge CFStringRef)@""public.png"", 1, nil);
+    CGImageDestinationAddImage(myImageDest, image, options);
+    CGImageDestinationFinalize(myImageDest);
+    CFRelease(myImageDest);
+}
+</code></pre>
+
+<p>While this produces smaller PNG files (win!), it takes about 13 seconds, 2 seconds more than before.</p>
+
+<p>Is there any way to encode a PNG image from <code>CGImage</code> faster? Perhaps a library that makes use of <code>NEON</code> ARM extension (iPhone 3GS+) like <a href=""http://libjpeg-turbo.virtualgl.org/"">libjpeg-turbo</a> does?</p>
+
+<p>Is there perhaps a better format than PNG for saving tiles that doesn't take up a lot of space?</p>
+
+<p>The only viable option I've been able to come up with is to increase the tile size to 512 x 512. This cuts the encoding time by half. Not sure what that will do to my scroll view though. The app is for iPad 2+, and only supports iOS 6 (using iPhone 4S as a baseline).</p>
+","867760","","867760","","2013-01-02 02:36:05","2014-02-05 17:06:48","Any way to encode a PNG faster than UIImagePNGRepresentation?","<ios><uiimage><catiledlayer><cgimageref><uiimagepngrepresentation>","1","0","4","",""
+"14115314","1","14115349","","2013-01-01 23:42:37","15","12465","<p>I am trying to compile the following C++ program which relies on the C++11 <code>&lt;thread&gt;</code> header. I am trying to do this on OSX Lion.</p>
+
+<pre><code>#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;vector&gt;
+
+void hello()
+{
+    std::cout &lt;&lt; ""Hello from thread "" &lt;&lt; std::this_thread::get_id() &lt;&lt; std::endl;
+}
+
+int main()
+{
+    std::vector&lt;std::thread&gt; threads;
+
+    for(int i = 0; i &lt; 5; i++)
+    {
+        threads.push_back(std::thread(hello));
+    }
+
+    for(auto&amp; thread: threads)
+    {
+        thread.join();
+    }
+
+    return 0;
+}
+</code></pre>
+
+<p>The above program compiles fine with g++ 4.7 which I installed using the homebrew package manager. However when trying to compile the above program with clang 3.2 (also installed using the homebrew package manager) I get the following error message:</p>
+
+<pre><code>Zameers-MacBook-Air:tmp zmanji$ clang++ -v -std=c++11 test.cpp 
+clang version 3.2 (tags/RELEASE_32/final)
+Target: x86_64-apple-darwin11.3.0
+Thread model: posix
+ ""/usr/local/Cellar/llvm/3.2/bin/clang"" -cc1 -triple x86_64-apple-macosx10.7.0 -emit-obj -mrelax-all -disable-free -main-file-name test.cpp -mrelocation-model pic -pic-level 2 -mdisable-fp-elim -masm-verbose -munwind-tables -target-cpu core2 -target-linker-version 128.2 -v -resource-dir /usr/local/Cellar/llvm/3.2/bin/../lib/clang/3.2 -fmodule-cache-path /var/folders/qf/j_7_sw0n093gn1y0mtsyztxh0000gn/T/clang-module-cache -std=c++11 -fdeprecated-macro -fdebug-compilation-dir /Users/zmanji/tmp -ferror-limit 19 -fmessage-length 101 -stack-protector 1 -mstackrealign -fblocks -fobjc-runtime=macosx-10.7.0 -fobjc-dispatch-method=mixed -fobjc-default-synthesize-properties -fencode-extended-block-signature -fcxx-exceptions -fexceptions -fdiagnostics-show-option -fcolor-diagnostics -o /var/folders/qf/j_7_sw0n093gn1y0mtsyztxh0000gn/T/test-Zkjucl.o -x c++ test.cpp
+clang -cc1 version 3.2 based upon LLVM 3.2svn default target x86_64-apple-darwin11.3.0
+ignoring nonexistent directory ""/usr/include/c++/4.2.1/i686-apple-darwin10/x86_64""
+ignoring nonexistent directory ""/usr/include/c++/4.0.0""
+ignoring nonexistent directory ""/usr/include/c++/4.0.0/i686-apple-darwin8/""
+ignoring nonexistent directory ""/usr/include/c++/4.0.0/backward""
+#include ""..."" search starts here:
+#include &lt;...&gt; search starts here:
+ /usr/include/c++/4.2.1
+ /usr/include/c++/4.2.1/backward
+ /usr/local/include
+ /usr/local/Cellar/llvm/3.2/bin/../lib/clang/3.2/include
+ /usr/include
+ /System/Library/Frameworks (framework directory)
+ /Library/Frameworks (framework directory)
+End of search list.
+test.cpp:2:10: fatal error: 'thread' file not found
+#include &lt;thread&gt;
+         ^
+1 error generated.
+</code></pre>
+
+<p>It seems that clang cannot find the <code>&lt;thread&gt;</code> header but I am not sure why.</p>
+
+<p><strong>Edit:</strong>
+I tried sharth's answer below and now I am getting the error that the <code>&lt;iostream&gt;</code> header does not exist.</p>
+
+<pre><code>Zameers-MacBook-Air:tmp zmanji$ clang++ -v -std=c++11 -stdlib=libc++ test.cpp 
+clang version 3.2 (tags/RELEASE_32/final)
+Target: x86_64-apple-darwin11.3.0
+Thread model: posix
+ ""/usr/local/Cellar/llvm/3.2/bin/clang"" -cc1 -triple x86_64-apple-macosx10.7.0 -emit-obj -mrelax-all -disable-free -main-file-name test.cpp -mrelocation-model pic -pic-level 2 -mdisable-fp-elim -masm-verbose -munwind-tables -target-cpu core2 -target-linker-version 128.2 -v -resource-dir /usr/local/Cellar/llvm/3.2/bin/../lib/clang/3.2 -fmodule-cache-path /var/folders/qf/j_7_sw0n093gn1y0mtsyztxh0000gn/T/clang-module-cache -stdlib=libc++ -std=c++11 -fdeprecated-macro -fdebug-compilation-dir /Users/zmanji/tmp -ferror-limit 19 -fmessage-length 203 -stack-protector 1 -mstackrealign -fblocks -fobjc-runtime=macosx-10.7.0 -fobjc-dispatch-method=mixed -fobjc-default-synthesize-properties -fencode-extended-block-signature -fcxx-exceptions -fexceptions -fdiagnostics-show-option -fcolor-diagnostics -o /var/folders/qf/j_7_sw0n093gn1y0mtsyztxh0000gn/T/test-k2Alf4.o -x c++ test.cpp
+clang -cc1 version 3.2 based upon LLVM 3.2svn default target x86_64-apple-darwin11.3.0
+ignoring nonexistent directory ""/usr/local/Cellar/llvm/3.2/bin/../lib/c++/v1""
+ignoring nonexistent directory ""/usr/include/c++/v1""
+#include ""..."" search starts here:
+#include &lt;...&gt; search starts here:
+ /usr/local/include
+ /usr/local/Cellar/llvm/3.2/bin/../lib/clang/3.2/include
+ /usr/include
+ /System/Library/Frameworks (framework directory)
+ /Library/Frameworks (framework directory)
+End of search list.
+test.cpp:1:10: fatal error: 'iostream' file not found
+#include &lt;iostream&gt;
+         ^
+1 error generated.
+</code></pre>
+","2874","","2874","","2013-01-02 02:33:48","2013-01-02 02:33:48","How to compile C++11 with clang 3.2 on OSX lion?","<c++><osx><c++11><clang>","1","1","4","",""
+"14115701","1","14116498","","2013-01-02 00:44:51","116","84622","<p>I am trying to create a directive that would create an input field with the same ng-model as the element that creates the directive.</p>
+
+<p>Here's what I came up with so far:</p>
+
+<p><strong>HTML</strong></p>
+
+<pre class=""lang-html prettyprint-override""><code>&lt;!doctype html&gt;
+&lt;html ng-app=""plunker"" &gt;
+&lt;head&gt;
+  &lt;meta charset=""utf-8""&gt;
+  &lt;title&gt;AngularJS Plunker&lt;/title&gt;
+  &lt;link rel=""stylesheet"" href=""style.css""&gt;
+  &lt;script&gt;document.write(""&lt;base href=\"""" + document.location + ""\"" /&gt;"");&lt;/script&gt;
+  &lt;script src=""https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js""&gt;&lt;/script&gt;
+  &lt;script src=""https://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.js""&gt;&lt;/script&gt;
+  &lt;script src=""app.js""&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body ng-controller=""MainCtrl""&gt;
+  This scope value &lt;input ng-model=""name""&gt;
+  &lt;my-directive ng-model=""name""&gt;&lt;/my-directive&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p><strong>JavaScript</strong></p>
+
+<pre class=""lang-js prettyprint-override""><code>var app = angular.module('plunker', []);
+
+app.controller('MainCtrl', function($scope) {
+  $scope.name = ""Felipe"";
+});
+
+app.directive('myDirective', function($compile) {
+  return {
+    restrict: 'E',
+    scope: {
+      ngModel: '='
+    },
+    template: '&lt;div class=""some""&gt;&lt;label for=""{{id}}""&gt;{{label}}&lt;/label&gt;' +
+      '&lt;input id=""{{id}}"" ng-model=""value""&gt;&lt;/div&gt;',
+    replace: true,
+    require: 'ngModel',
+    link: function($scope, elem, attr, ctrl) {
+      $scope.label = attr.ngModel;
+      $scope.id = attr.ngModel;
+      console.debug(attr.ngModel);
+      console.debug($scope.$parent.$eval(attr.ngModel));
+      var textField = $('input', elem).
+        attr('ng-model', attr.ngModel).
+        val($scope.$parent.$eval(attr.ngModel));
+
+      $compile(textField)($scope.$parent);
+    }
+  };
+});
+</code></pre>
+
+<p>However, I am not confident this is the right way to handle this scenario, and there is a bug that my control is not getting initialized with the value of the ng-model target field.</p>
+
+<p>Here's a Plunker of the code above: <a href=""http://plnkr.co/edit/IvrDbJ"">http://plnkr.co/edit/IvrDbJ</a></p>
+
+<p>What's the correct way of handling this?</p>
+
+<p><strong>EDIT</strong>: After removing the <code>ng-model=""value""</code> from the template, this seems to be working fine. However, I will keep this question open because I want to double check this is the right way of doing this.</p>
+","14540","","1015177","","2013-06-07 01:48:51","2014-03-25 05:40:41","AngularJS - Create a directive that uses ng-model","<angularjs><directive>","5","0","38","",""
+"14115980","1","14116215","","2013-01-02 01:37:53","21","4420","<p>Spoiler alert, this is problem 5 of Project Euler.</p>
+
+<p>I am attempting to learn Clojure and solved problem 5, but it is a couple orders of magnitude slower (1515 ms in Java versus 169932 ms in Clojure). I even tried using type hinting, unchecked math operations, and inlining functions all for naught.</p>
+
+<p>Why is my Clojure code so much slower?</p>
+
+<p>Clojure code:</p>
+
+<pre><code>(set! *unchecked-math* true)
+(defn divides? [^long number ^long divisor] (zero? (mod number divisor)))
+
+(defn has-all-divisors [divisors ^long num]
+  (if (every? (fn [i] (divides? num i)) divisors) num false))
+
+(time (prn (some (fn [^long i] (has-all-divisors (range 2 20) i)) (iterate inc 1))))
+</code></pre>
+
+<p>Java code:</p>
+
+<pre><code>public class Problem5 {
+  public static void main(String[] args) {
+    long start = System.currentTimeMillis();
+    int i = 1;
+    while(!hasAllDivisors(i, 2, 20)) {
+      i++;
+    }
+    long end = System.currentTimeMillis();
+    System.out.println(i);
+    System.out.println(""Elapsed time "" + (end - start));
+  }
+
+  public static boolean hasAllDivisors(int num, int startDivisor, int stopDivisor) {
+    for(int divisor=startDivisor; divisor&lt;=stopDivisor; divisor++) {
+      if(!divides(num, divisor)) return false;
+    }
+    return true;
+  }
+
+  public static boolean divides(int num, int divisor) {
+    return num % divisor == 0;
+  }
+}
+</code></pre>
+","1054469","","1054469","","2013-01-04 05:08:20","2014-01-02 06:11:41","Clojure performance really bad on simple loop versus Java","<java><performance><math><clojure>","2","2","11","",""
+"14116003","1","14117121","","2013-01-02 01:42:28","42","7795","<p>What's the difference between <code>constexpr</code> and <code>const</code>?</p>
+
+<ul>
+<li>When can I use only one of them?  </li>
+<li>When can I use both and how should I choose one?</li>
+</ul>
+","395573","","777186","","2013-01-02 09:17:16","2013-10-02 13:29:56","Difference between `constexpr` and `const`","<c++><c++11><const><constexpr>","3","3","23","",""
+"14117114","1","","","2013-01-02 05:10:16","26","32046","<p>Seems the last post for this problem was closed for one reason or another so I'll try my luck...</p>
+
+<p>I'm trying to run a simple ""rake db:migrate"" command. When I do, I get the error in the title.  Yes, the solution ""appears"" obvious but it's not because I don't my Rakefile does not contain any references to 'rake/rdoctask'. It seems to be coming from documentation.rake but when I try to change that file as recommended by the error, I get a different error. I have found a couple of posts declaring this to be a known issue but nothing I've found indicates how to fix or work around this.</p>
+
+<p>Does anyone have any ideas how to fix it?  Below is the output from the rake command with a --trace:</p>
+
+<pre><code>$ rake --trace db:migrate
+rake aborted!
+ERROR: 'rake/rdoctask' is obsolete and no longer supported. Use 'rdoc/task' (available in RDoc 2.4.2+) instead.
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/rdoctask.rb:1:in `&lt;top (required)&gt;'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/tasks/documentation.rake:2:in `require'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/tasks/documentation.rake:2:in `&lt;top (required)&gt;'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/tasks.rb:15:in `load'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/tasks.rb:15:in `block in &lt;top (required)&gt;'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/tasks.rb:6:in `each'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/tasks.rb:6:in `&lt;top (required)&gt;'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/application.rb:213:in `require'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/application.rb:213:in `initialize_tasks'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/application.rb:139:in `load_tasks'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/railties-3.0.3/lib/rails/application.rb:77:in `method_missing'
+    C:/developer/skknobara/Rakefile:7:in `&lt;top (required)&gt;'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/rake_module.rb:25:in `load'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/rake_module.rb:25:in `load_rakefile'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/application.rb:583:in `raw_load_rakefile'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/application.rb:89:in `block in load_rakefile'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/application.rb:160:in `standard_exception_handling'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/application.rb:88:in `load_rakefile'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/application.rb:72:in `block in run'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/application.rb:160:in `standard_exception_handling'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/lib/rake/application.rb:70:in `run'
+    C:/Programs/Ruby193/lib/ruby/gems/1.9.1/gems/rake-10.0.3/bin/rake:33:in `&lt;top (required)&gt;'
+    C:/Programs/Ruby193/bin/rake:23:in `load'
+    C:/Programs/Ruby193/bin/rake:23:in `&lt;main&gt;'
+</code></pre>
+
+<hr>
+
+<p>I discovered that I had rails 3.0.3 in my Gemfile so I changed it to 3.2.9, but now when I run rake db:migrate I get:</p>
+
+<pre><code>rake aborted!
+Bundler could not find compatible versions for gem ""rack"":
+  In Gemfile:
+    rails (= 3.2.9) x86-mingw32 depends on
+      rack (~&gt; 1.4.0) x86-mingw32
+
+    rack (1.2.5)
+</code></pre>
+
+<p>I'm not sure what the error means but ""gem list rack"" shows I have both 1.4.1 and 1.4.0 installed.  My Gemfile is pretty simple:</p>
+
+<pre><code>gem 'rails', '3.2.9'
+gem 'rack','&lt; 1.4.1'
+gem 'mysql2', '&lt; 0.3'
+</code></pre>
+
+<p>Any thoughts?</p>
+","1143970","","1143970","","2013-01-03 05:55:13","2013-11-27 08:15:29","ERROR: 'rake/rdoctask' is obsolete and no longer supported. Use 'rdoc/task' (available in RDoc 2.4.2+) instead","<ruby-on-rails><ruby-on-rails-3.2>","10","0","12","",""
+"14116882","1","14117348","","2013-01-02 04:34:56","13","2261","<p>Apologize for the noob question. Just beginning to learn servicestack. I'm using a self-hosted console application with Razor for my view engine, the ""RegistrationFeature"" plugin for registrations and CredentialsAuthProvider for authentication via form post to allow users to login. </p>
+
+<p>The <a href=""https://github.com/ServiceStack/SocialBootstrapApi"">SocialBootStrap</a> application uses MVC 3 and does a ""FormsAuthentication.SignOut()"" to allow users to  logout. Given that I'm using a self hosted application,  I created a LogoutService that simply does a Request.RemoveSession() and that appears to work. </p>
+
+<p>Is this the right way to log out a user's session ?</p>
+","212012","","","","","2014-06-02 20:08:30","How to logout authenticated user in ServiceStack?","<servicestack>","2","0","1","",""
+"14120223","1","16377459","","2013-01-02 10:15:04","16","766","<p>I was just answering <a href=""http://stackoverflow.com/questions/5857240/why-there-is-no-placement-delete-expression-in-c/14119344#14119344"">a question</a> about the lack of placement delete corresponding to placement new. The reason seems to be the way <code>operator delete</code> is called according to the dynamic type of the object (corresponding to the type used to find <code>operator new</code>).</p>
+
+<p>Placement <code>new</code> has been useful to me. When it comes to custom allocation, there is probably a reusable class where different instances manage different pools. Singletons are an anti-pattern and all that.</p>
+
+<p>I can understand the convenience of making <code>new thing;</code> work without keeping track of an allocator, but doing things for different branches of the type hierarchy seems pretty convoluted.</p>
+
+<p>Is there a real-world scenario where a derived class uses a different allocator from its base, and relies on a virtual destructor to find the correct member <code>operator delete</code>?</p>
+
+<p>Lest this be subjective, I'll accept the answer which is most plausible. Let's not quibble over code smells or the ""best"" way of doing things.</p>
+","153285","","","","","2013-05-04 18:15:04","Are member new/delete overloads in a derived class ever useful?","<c++><inheritance><operator-overloading><new-operator>","4","11","1","",""
+"14116420","1","14116513","","2013-01-02 03:01:54","18","3650","<p>I have a program and a static library:</p>
+
+<pre><code>// main.cpp
+int main() {}
+
+// mylib.cpp
+#include &lt;iostream&gt;
+struct S {
+    S() { std::cout &lt;&lt; ""Hello World\n"";}
+};
+S s;
+</code></pre>
+
+<p>I want to link the static library (<code>libmylib.a</code>) to the program object (<code>main.o</code>), although the latter does not use any symbol of the former directly.</p>
+
+<p>The following commands do not seem to the job with <code>g++ 4.7</code>. They will run without any errors or warnings, but apparently <code>libmylib.a</code> will not be linked:</p>
+
+<pre><code>g++ -o program main.o -Wl,--no-as-needed /path/to/libmylib.a
+</code></pre>
+
+<p>or</p>
+
+<pre><code>g++ -o program main.o -L/path/to/ -Wl,--no-as-needed -lmylib
+</code></pre>
+
+<p>Do you have any better ideas?</p>
+","989331","","989331","","2013-01-02 03:12:54","2013-01-02 05:38:36","How to force gcc to link an unused static library","<c++><c><gcc><g++><ld>","3","7","5","",""
+"14120661","1","14120721","","2013-01-02 10:45:27","20","7587","<p>I made new object Date.new with args (year, month). After create ruby added 01 number of day to this object by default. Is there any way to add not first day, but last day of month that i  passed as arg(e.g. 28 if it will be 02month or 31 if it will be 01month) ?</p>
+","1600336","","877819","","2014-03-06 04:13:46","2014-10-10 22:10:32","Get last day of the month in Ruby","<ruby><date><datetime>","3","0","6","",""
+"14120711","1","14125030","","2013-01-02 10:49:02","14","1084","<p>In linux kernel source code, added this lines in <code>tasklet_action</code> code:</p>
+
+<pre><code>printk(""tasklet_action = %p\n"" , *tasklet_action);
+printk(""tasklet_action = %p\n"" , &amp;tasklet_action);
+printk(""tasklet_action = %p\n"" , tasklet_action);
+</code></pre>
+
+<p>In the output I get:</p>
+
+<pre><code>tasklet_action = c03441a1
+tasklet_action = c03441a1
+tasklet_action = c03441a1
+</code></pre>
+
+<p>But when searching it in the <code>system.map</code> file the <code>tasklet_action</code> address is at <code>c03441a0</code> so there is an offset of 1 byte. </p>
+
+<ul>
+<li>Why do I have this offset?</li>
+<li>Is it always an one byte offset?</li>
+</ul>
+","1031417","","1031417","","2013-06-22 09:53:18","2013-06-22 09:53:18","Linux Kernel - why a function's address in System.map is one byte preceding its address as seen in real time?","<c><linux><linux-kernel><arm><function-pointers>","1","8","8","",""
+"14119277","1","14119294","","2013-01-02 09:03:11","13","49591","<pre><code>Select I.Fee
+From Item I
+WHERE GETDATE() - I.DateCreated &lt; 365 days
+</code></pre>
+
+<p>How can I subtract two days? Result should be days. Ex: 365 days. 500 days.. etc...</p>
+","1218067","","13302","","2013-01-02 09:19:27","2013-07-11 04:18:10","Subtract two dates in SQL and get days of the result","<sql><sql-server><tsql>","5","0","","",""

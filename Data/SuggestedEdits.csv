@@ -1,0 +1,410 @@
+Id,PostId,CreationDate,ApprovalDate,RejectionDate,OwnerUserId,Comment,Text,Title,Tags,RevisionGUID
+"523078","14107979","2013-01-01 05:15:08","","2013-01-01 05:16:12","1538079","Better title","","How can i make specific part Blur of an image (rectangular, circular) ?","","efbc9823-3d51-471d-8431-cb4468457d28"
+"523615","14114419","2013-01-01 21:35:31","2013-01-01 21:36:39","","1296660","Replace spaces with hypens","Easy peasy:
+
+    function clean($string) {
+       $string = str_replace("" "", ""-"", $string);
+       return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+    }
+
+<b>Usage:</b>
+    
+    echo clean('a|""bc!@£de^&$fg');
+
+Will output: `abcdefg`","","","502a7df7-55b0-48d3-a9fb-9c123b1f3882"
+"523616","14114411","2013-01-01 21:37:18","","2013-01-01 21:38:09","1052743","Added 'seo' tag","","","php regex seo","dce76142-f83f-49b4-bcd5-b71dd18ba5dc"
+"555089","14120652","2013-01-23 23:08:49","","2013-01-23 23:17:49","835145","Downvoted by accident; recovering my vote","Hey just a FYI about the usability and ___what difference it makes or can make if there is a statement like that___
+
+Consider a piece of code like following
+
+    int a=10;
+    if((a=50)==50);
+    
+    System.out.println(""Value of a = "" +a);
+
+Clearly in this case, the if statement does change the output. So a statement like that can make a difference. 
+
+
+This is one situation where it could be useful or better to say have an impact on program.
+","","","7ca8fadc-6dc0-41bc-8412-0fc0593c3c46"
+"592383","14974123","2013-02-20 07:27:47","2013-02-20 07:28:14","","938024","improved format and corrected spelling","instead of using mongoimport `-d DATABASE_NAME -c COLLECTION_NAME --file YOUR_JSON_FILE`, use following command mongoimport: `-d DATABASE_NAME -c COLLECTION_NAME --file YOUR_JSON_FILE --jsonArray`.","","","5893874e-61d1-4713-b447-7ff651da08a6"
+"749535","14115701","2013-06-07 01:39:16","2013-06-07 01:48:51","","1015177","Add syntax hilighting","I am trying to create a directive that would create an input field with the same ng-model as the element that creates the directive.
+
+Here's what I came up with so far:
+
+__HTML__
+
+<!-- language: lang-html -->
+
+    <!doctype html>
+    <html ng-app=""plunker"" >
+    <head>
+      <meta charset=""utf-8"">
+      <title>AngularJS Plunker</title>
+      <link rel=""stylesheet"" href=""style.css"">
+      <script>document.write(""<base href=\"""" + document.location + ""\"" />"");</script>
+      <script src=""https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js""></script>
+      <script src=""https://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.js""></script>
+      <script src=""app.js""></script>
+    </head>
+    <body ng-controller=""MainCtrl"">
+      This scope value <input ng-model=""name"">
+      <my-directive ng-model=""name""></my-directive>
+    </body>
+    </html>
+
+__JavaScript__
+
+<!-- language: lang-js -->
+
+    var app = angular.module('plunker', []);
+    
+    app.controller('MainCtrl', function($scope) {
+      $scope.name = ""Felipe"";
+    });
+    
+    app.directive('myDirective', function($compile) {
+      return {
+        restrict: 'E',
+        scope: {
+          ngModel: '='
+        },
+        template: '<div class=""some""><label for=""{{id}}"">{{label}}</label>' +
+          '<input id=""{{id}}"" ng-model=""value""></div>',
+        replace: true,
+        require: 'ngModel',
+        link: function($scope, elem, attr, ctrl) {
+          $scope.label = attr.ngModel;
+          $scope.id = attr.ngModel;
+          console.debug(attr.ngModel);
+          console.debug($scope.$parent.$eval(attr.ngModel));
+          var textField = $('input', elem).
+            attr('ng-model', attr.ngModel).
+            val($scope.$parent.$eval(attr.ngModel));
+    
+          $compile(textField)($scope.$parent);
+        }
+      };
+    });
+
+However, I am not confident this is the right way to handle this scenario, and there is a bug that my control is not getting initialized with the value of the ng-model target field.
+
+Here's a Plunker of the code above: http://plnkr.co/edit/IvrDbJ
+
+What's the correct way of handling this?
+
+__EDIT__: After removing the `ng-model=""value""` from the template, this seems to be working fine. However, I will keep this question open because I want to double check this is the right way of doing this.","","","c489b11e-a079-4a7d-9e85-b026d79fc877"
+"920970","14108694","2013-09-30 15:31:05","2013-09-30 15:34:17","","1518265","corrected spelling, cohesiveness","![enter image description here][1]
+
+Just set your `UIImageView` property name as ""imageView"" and add the following four methods with the same sequence in your implementation file. Also, set your ImageView Mode to 'Redraw'.  Add UIImage Category for the blur effect as given or use any custom class, it will work for you.
+
+Method 1 - Cropping the Image 
+
+    #pragma mark - Cropping the Image 
+    
+    - (UIImage *)croppIngimageByImageName:(UIImage *)imageToCrop toRect:(CGRect)rect{
+        
+        CGImageRef imageRef = CGImageCreateWithImageInRect([imageToCrop CGImage], rect);    
+        UIImage *cropped = [UIImage imageWithCGImage:imageRef];
+        CGImageRelease(imageRef);
+        
+        return cropped;   
+        
+        
+    }
+
+
+Method 2 - Merge the two Images 
+
+
+    #pragma mark - Marge two Images 
+    
+    - (UIImage *) addImageToImage:(UIImage *)img withImage2:(UIImage *)img2 andRect:(CGRect)cropRect{
+        
+        CGSize size = CGSizeMake(imageView.image.size.width, imageView.image.size.height);
+        UIGraphicsBeginImageContext(size);
+        
+        CGPoint pointImg1 = CGPointMake(0,0);
+        [img drawAtPoint:pointImg1]; 
+        
+        CGPoint pointImg2 = cropRect.origin;
+        [img2 drawAtPoint: pointImg2];
+        
+        UIImage* result = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        return result;
+    }
+
+
+Method 3 - RoundRect the Image
+
+
+    #pragma mark - RoundRect the Image
+    
+    - (UIImage *)roundedRectImageFromImage:(UIImage *)image withRadious:(CGFloat)radious {
+        
+        if(radious == 0.0f)
+            return image;
+        
+        if( image != nil) {
+            
+            CGFloat imageWidth = image.size.width;
+            CGFloat imageHeight = image.size.height;
+            
+            CGRect rect = CGRectMake(0.0f, 0.0f, imageWidth, imageHeight);
+            UIWindow *window = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
+            const CGFloat scale = window.screen.scale;
+            UIGraphicsBeginImageContextWithOptions(rect.size, NO, scale);
+            
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            
+            CGContextBeginPath(context);
+            CGContextSaveGState(context);
+            CGContextTranslateCTM (context, CGRectGetMinX(rect), CGRectGetMinY(rect));
+            CGContextScaleCTM (context, radious, radious);
+            
+            CGFloat rectWidth = CGRectGetWidth (rect)/radious;
+            CGFloat rectHeight = CGRectGetHeight (rect)/radious;
+            
+            CGContextMoveToPoint(context, rectWidth, rectHeight/2.0f);
+            CGContextAddArcToPoint(context, rectWidth, rectHeight, rectWidth/2.0f, rectHeight, radious);
+            CGContextAddArcToPoint(context, 0.0f, rectHeight, 0.0f, rectHeight/2.0f, radious);
+            CGContextAddArcToPoint(context, 0.0f, 0.0f, rectWidth/2.0f, 0.0f, radious);
+            CGContextAddArcToPoint(context, rectWidth, 0.0f, rectWidth, rectHeight/2.0f, radious);
+            CGContextRestoreGState(context);
+            CGContextClosePath(context);
+            CGContextClip(context);
+            
+            [image drawInRect:CGRectMake(0.0f, 0.0f, imageWidth, imageHeight)];
+            
+            UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            return newImage;
+        } 
+        return nil;
+    }
+
+Method 4 - Touch Move
+
+
+    #pragma mark - Touch Methods
+    
+    - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+     
+        
+        UIImage *croppedImg = nil;
+        
+        UITouch *touch = [touches anyObject];
+        CGPoint currentPoint = [touch locationInView:self.imageView];
+        
+        double ratioW=imageView.image.size.width/imageView.frame.size.width ;
+        
+        double ratioH=imageView.image.size.height/imageView.frame.size.height;
+        
+        currentPoint.x *= ratioW;
+        currentPoint.y *= ratioH;
+        
+        double circleSizeW = 30 * ratioW;
+        double circleSizeH = 30 * ratioH;
+        
+        
+        currentPoint.x = (currentPoint.x - circleSizeW/2<0)? 0 : currentPoint.x - circleSizeW/2;
+        currentPoint.y = (currentPoint.y - circleSizeH/2<0)? 0 : currentPoint.y - circleSizeH/2;
+        
+        
+        CGRect cropRect = CGRectMake(currentPoint.x , currentPoint.y,   circleSizeW,  circleSizeH);
+        
+        NSLog(@""x %0.0f, y %0.0f, width %0.0f, height %0.0f"", cropRect.origin.x, cropRect.origin.y,   cropRect.size.width,  cropRect.size.height );
+        
+        croppedImg = [self croppIngimageByImageName:self.imageView.image toRect:cropRect];
+     
+        // Blur Effect 
+        croppedImg = [croppedImg imageWithGaussianBlur9];
+        
+        // Contrast Effect 
+        // croppedImg = [croppedImg imageWithContrast:50];
+        
+        
+        
+        croppedImg = [self roundedRectImageFromImage:croppedImg withRadious:4]; 
+        
+        imageView.image = [self addImageToImage:imageView.image withImage2:croppedImg andRect:cropRect];  
+    } 
+
+
+
+UIImage Category Class
+
+UIImage+ImageBlur.h
+
+    #import <UIKit/UIKit.h>
+    
+    @interface UIImage (ImageBlur)
+    
+    - (UIImage *)imageWithGaussianBlur9;
+    
+    @end
+
+UIImage+ImageBlur.m
+
+    #import ""UIImage+ImageBlur.h""
+    
+    @implementation UIImage (ImageBlur)
+    
+    - (UIImage *)imageWithGaussianBlur9 {
+        float weight[5] = {0.1270270270, 0.1945945946, 0.1216216216, 0.0540540541, 0.0162162162};
+        // Blur horizontally
+        UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
+        [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:weight[0]];
+        for (int x = 1; x < 5; ++x) {
+            [self drawInRect:CGRectMake(x, 0, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:weight[x]];
+            [self drawInRect:CGRectMake(-x, 0, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:weight[x]];
+        }
+        UIImage *horizBlurredImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        // Blur vertically
+        UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
+        [horizBlurredImage drawInRect:CGRectMake(0, 0, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:weight[0]];
+        for (int y = 1; y < 5; ++y) {
+            [horizBlurredImage drawInRect:CGRectMake(0, y, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:weight[y]];
+            [horizBlurredImage drawInRect:CGRectMake(0, -y, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:weight[y]];
+        }
+        UIImage *blurredImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        //
+        return blurredImage;
+    }
+    
+    @end
+
+
+  [1]: http://i.stack.imgur.com/gIwIn.png","","","172d08bd-7245-45a2-8b0a-37d49614a9b6"
+"1009697","14114419","2013-11-28 17:34:13","2013-11-28 17:43:22","","969807","Fix spaces to hyphens","Easy peasy:
+
+    function clean($string) {
+       $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+       return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+    }
+
+<b>Usage:</b>
+    
+    echo clean('a|""bc!@£de^&$f g');
+
+Will output: `abcdef-g`
+
+<b>Edit:</b>
+>Hey, just a quick question, how can I prevent multiple hyphens from being next to each other? and have them replaced with just 1? Thanks in advance!
+
+    function clean($string) {
+       $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+       $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+       
+       return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+    }","","","455e275e-4f60-4122-815c-f4d4a0d66ff2"
+"1152952","14116498","2014-02-15 19:11:37","2014-02-15 19:17:37","","856468","Added A to restrict so it will work with an attribute","It's actually pretty good logic but you can simplify things a bit.
+
+
+###Directive
+
+    var app = angular.module('plunker', []);
+    
+    app.controller('MainCtrl', function($scope) {
+      $scope.model = { name: 'World' };
+      $scope.name = ""Felipe"";
+    });
+    
+    app.directive('myDirective', function($compile) {
+      return {
+        restrict: 'AE', //attribute or element
+        scope: {
+          myDirectiveVar: '=',
+         //bindAttr: '='
+        },
+        template: '<div class=""some"">' +
+          '<input ng-model=""myDirectiveVar""></div>',
+        replace: true,
+        //require: 'ngModel',
+        link: function($scope, elem, attr, ctrl) {
+          console.debug($scope);
+          //var textField = $('input', elem).attr('ng-model', 'myDirectiveVar');
+          // $compile(textField)($scope.$parent);
+        }
+      };
+    });
+
+###Html with directive
+
+    <body ng-controller=""MainCtrl"">
+      This scope value <input ng-model=""name"">
+      <my-directive my-directive-var=""name""></my-directive>
+    </body>
+
+###CSS
+
+    .some {
+      border: 1px solid #cacaca;
+      padding: 10px;
+    }
+
+You can see it in action with this [Plunker][1].
+
+
+Here's what I see:
+
+* I understand why you want to use 'ng-model' but in your case it's not necessary.  ng-model is to link *existing* html elements with a value in the scope.  Since you're creating a directive yourself you're creating a 'new' html element, so you don't need ng-model.
+
+**EDIT** As mentioned by Mark in his comment, there's no reason that you *can't* use ng-model, just to keep with convention.
+
+* By explicitly creating a scope in your directive (an 'isolated' scope), the directive's scope cannot access the 'name' variable on the parent scope (which is why, I think, you wanted to use ng-model).
+* I removed ngModel from your directive and replaced it with a custom name that you can change to whatever.
+* The thing that makes it all still work is that '=' sign in the scope.  Checkout the docs  [docs][2] under the 'scope' header.
+
+In general, your directives should use the isolated scope (which you did correctly) and use the '=' type scope if you want a value in your directive to always map to a value in the parent scope. 
+
+
+  [1]: http://plnkr.co/edit/A29hl6
+  [2]: http://docs.angularjs.org/guide/directive","","","56aa46ac-080f-4eae-9e10-bdcd94dd429c"
+"1370806","14111052","2014-06-04 17:54:33","2014-06-04 17:59:26","","350040","Added samsung-mobile tag","","","android samsung-mobile multi-window","2ea7da80-3cf7-4efd-a968-a02697e82101"
+"1558048","26308288","2014-10-10 21:34:04","2014-10-10 22:10:32","","3557336","Formmated the answer","So I was searching in Google for the same thing here...
+
+I wasn't happy with above so my solution after reading documentation 
+in [RUBY-DOC][1] was:
+
+Example to get `10/31/2014`
+
+`Date.new(2014,10,1).next_month.prev_day`
+
+
+
+  [1]: http://ruby-doc.org/stdlib-2.1.3/libdoc/date/rdoc/Date.html","","","6583fa85-75d9-4c8f-afe9-8f4d41d90f0c"
+"1703387","20159814","2015-01-30 01:55:26","2015-01-30 02:02:48","","4296","Clarified wording under ""Most Examples...""","I've gone down many paths and created many implementations of repositories on different projects and... I've thrown the towel in and given up on it, here's why. 
+
+**Coding for the exception**
+
+Do you code for the 1% chance your database is going to change from one technology to another? If you're thinking about your business's future state and say yes that's a possibility then a) they must have a lot of money to afford to do a migration to another DB technology or b) you're choosing a DB technology for fun or c) something has gone horribly wrong with the first technology you decided to use.
+
+**Why throw away the rich LINQ syntax?**
+
+LINQ and EF were developed so you could do neat stuff with it to read and traverse object graphs. Creating and maintain a repository that can give you the same flexibility to do that is a monstrous task. In my experience any time I've created a repository I've **ALWAYS** had business logic leak into the repository layer to either make queries more perform-ant and/or reduce the number of hits to the database.
+
+I don't want to create a method for every single permutation of a query that I have to write. I might as well write stored procedures. I don't want GetOrder, GetOrderWithOrderItem, GetOrderWithOrderItemWithOrderActivity, GetOrderByUserId, and so on... I just want to get the main entity and traverse and include the object graph as I so please.
+
+**Most examples of repositories are bullshit** 
+
+Unless you are developing something REALLY bare-bones like a blog or something your queries are never going to be as simple as 90% of the examples you find on the internet surrounding the repository pattern. I cannot stress this enough! This is something that one has to crawl through the mud to figure out. There will always be that one query that breaks your perfectly thought out repository/solution that you've created, and its not until that point where you 2nd guess yourself and the technical debt/erosion begins.
+
+**Don't unit test me bro**
+
+But what about unit testing if I don't have a repository? How will I mock? Simple you don't. Lets look at it from both angles:
+
+No repository - You can mock the DbContext using an IDbContext or some other tricks but then you're really unit testing LINQ to Objects and not LINQ to Entities because the query is determined at runtime... OK so that's not good! So now its up to the integration test to cover this.
+
+With repository - You can now mock your repositories and unit test the layer(s) in between. Great right? Well not really... In the cases above where you have to leak logic into the repository layer to make queries more perform-ant and/or less hits to the database, how can your unit tests cover that? It's now in the repo layer and you don't want to test IQueryable<T> right? Also lets be honest, your unit tests aren't going to cover the queries that have a 20 line `.Where()` clause and `.Include()`'s a bunch of relationships and hits the database again to do all this other stuff, blah, blah, blah anyway's because the query is generated at runtime. Also since you created a repository to keep the upper layers persistence ignorant, if you now you want to change your database technology, sorry your unit tests are defiantly not going to guarantee the same results at runtime, back to integration tests. So the whole point of the repository seems weird..
+
+**2 cents**
+
+We already lose a lot of functionality and syntax when using EF over plain stored procedures (bulk inserts, bulk deletes, CTE's, etc.) but I also code in C# so I don't have to type binary. We use EF so we can have the possibility of using different providers and to work with object graphs in a nice related way amongst many things. Certain abstractions are useful and some are not.
+
+I hope this helps someone on the internets somewhere...","","","abce5e4c-acc8-4026-8585-58ba9bfcc2de"
