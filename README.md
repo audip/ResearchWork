@@ -1,3 +1,5 @@
 #MSR 2015
 
-Work done by Udit Dokanaia, Aditya Purandare
+The ongoing research is about developing a measurement model for the automatic evaluation of the Post Information on the community question-answer portal - *Stack Overflow*
+
+Work done by **Udit Dokania, Aditya Purandare and partly by Sanjeev Ahuja :P**
