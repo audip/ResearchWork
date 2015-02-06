@@ -1,0 +1,48 @@
+|&lt;h2&gt;Why does it happen?&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://docs.oracle.com/javase/specs/jls/se7/html/jls-14.html&quot;&gt;Java Language Specification&lt;/a&gt; says that:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;The Empty Statement&lt;/strong&gt;&lt;/p&gt;
+  
+  &lt;p&gt;An empty statement does nothing. &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;EmptyStatement:
+    ;
+&lt;/code&gt;&lt;/pre&gt;
+  
+  &lt;p&gt;Execution of an empty statement always completes normally&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;It essentially means that you want to execute empty statement if a==b &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if(a == b);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;What should you do:&lt;/h2&gt;
+
+&lt;p&gt;There are two main solutions to this problem:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;You can avoid problems with empty statement by using code formatter
+and surrounding stuff inside &lt;code&gt;if&lt;/code&gt; with &lt;code&gt;{&lt;/code&gt; and &lt;code&gt;}&lt;/code&gt;. By doing this
+Your empty statement will be much more readable.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if(a == b){
+  ;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;You can also check tools used for static code analysis such as:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i.stack.imgur.com/z98da.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://findbugs.sourceforge.net/&quot;&gt;Findbugs&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://checkstyle.sourceforge.net/&quot;&gt;Checkstyle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pmd.sourceforge.net/&quot;&gt;Pmd&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;They can instantly highlight problems such as this one.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I would recommend to combine both solutions. &lt;/p&gt;
